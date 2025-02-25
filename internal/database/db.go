@@ -1,16 +1,16 @@
 package database
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func Connect() (*sql.DB, error) {
+func Connect() (*gorm.DB, error) {
 	err := godotenv.Load()
 
 	if err != nil {
@@ -27,7 +27,7 @@ func Connect() (*sql.DB, error) {
 		os.Getenv("DB_SSLMODE"),
 	)
 
-	db, err := sql.Open("postgres", dsn)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, errors.New("can not connect to databse")
 	}
