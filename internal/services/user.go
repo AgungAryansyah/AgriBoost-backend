@@ -21,9 +21,10 @@ type UserService struct {
 	jwt      jwt.JWTItf
 }
 
-func NewUserService(userRepo repositories.UserRepoItf) UserServiceItf {
+func NewUserService(userRepo repositories.UserRepoItf, jwt jwt.JWTItf) UserServiceItf {
 	return &UserService{
 		userRepo: userRepo,
+		jwt:      jwt,
 	}
 }
 

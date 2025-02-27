@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"os"
+	"AgriBoost/internal/infra/env"
 	"strconv"
 	"time"
 
@@ -19,16 +19,16 @@ type JWT struct {
 	expiresAt time.Time
 }
 
-func NewJwt() JWTItf {
+func NewJwt(env env.Env) JWTItf {
 	err := godotenv.Load()
 	if err != nil {
 		return nil
 	}
-	exp, err := strconv.Atoi(os.Getenv("JWT_EXPIRED"))
+	exp, err := strconv.Atoi(env.JWT_EXPIRED)
 	if err != nil {
 		return nil
 	}
-	secret := os.Getenv("JWT_SECRET")
+	secret := env.JWT_SECRET
 	return &JWT{
 		secretKey: secret,
 		expiresAt: time.Now().Add(time.Duration(exp) * time.Hour),
