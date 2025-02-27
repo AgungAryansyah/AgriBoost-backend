@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"AgriBoost/internal/infra/env"
+	"errors"
 	"strconv"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 
 type JWTItf interface {
 	GenerateToken(id uuid.UUID) (string, error)
+	ValidateToken(token string) (uuid.UUID, error)
 }
 
 type JWT struct {
@@ -49,9 +51,27 @@ func (j *JWT) GenerateToken(id uuid.UUID) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	tokenString, err := token.SignedString(j.secretKey)
+	tokenString, err := token.SignedString([]byte(j.secretKey))
 	if err != nil {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func (j *JWT) ValidateToken(tokenString string) (uuid.UUID, error) {
+	var claim Claims
+
+	token, err := jwt.ParseWithClaims(tokenString, &claim, func(t *jwt.Token) (interface{}, error) {
+		return []byte(j.secretKey), nil
+	})
+
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if !token.Valid {
+		return uuid.Nil, errors.New("token invalid")
+	}
+
+	return claim.Id, nil
 }
