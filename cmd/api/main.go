@@ -2,7 +2,7 @@ package main
 
 import (
 	"AgriBoost/internal/handlers"
-	database "AgriBoost/internal/infra"
+	database "AgriBoost/internal/infra/database"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
 

@@ -23,6 +23,7 @@ func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, use
 	routerGroup = routerGroup.Group("/users")
 
 	routerGroup.Post("/register", UserHandler.Register)
+	routerGroup.Get("/login", UserHandler.Login)
 }
 
 func (h *UserHandler) Register(ctx *fiber.Ctx) error {
@@ -42,4 +43,25 @@ func (h *UserHandler) Register(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.JSON(http.StatusOK)
+}
+
+func (h *UserHandler) Login(ctx *fiber.Ctx) error {
+	var login dto.Login
+
+	if err := ctx.BodyParser(&login); err != nil {
+		return err
+	}
+
+	if err := h.validator.Struct(login); err != nil {
+		return err
+	}
+
+	token, err := h.userService.Login(login)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(fiber.Map{
+		"token": token,
+	})
 }
