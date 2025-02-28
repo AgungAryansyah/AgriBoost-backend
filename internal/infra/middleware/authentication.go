@@ -16,11 +16,11 @@ func (m *Middleware) Authentication(ctx *fiber.Ctx) error {
 	}
 
 	bearerToker := authToken[0]
-	token := strings.Split(bearerToker, ".")
+	token := strings.Split(bearerToker, " ")
 
 	id, err := m.jwt.ValidateToken(token[1])
 	if err != nil {
-		return ctx.SendStatus(401).JSON(fiber.Map{
+		return ctx.Status(401).JSON(fiber.Map{
 			"message": "token tidak valid",
 		})
 	}

@@ -14,6 +14,6 @@ type Login struct {
 }
 
 type UserParam struct {
-	Id    uuid.UUID
-	Email string
+	Id    uuid.UUID `json:"id" validated:"required,uuid"`
+	Email string    `json:"email" validated:"required,email"`
 }
