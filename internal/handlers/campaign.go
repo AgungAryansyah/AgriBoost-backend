@@ -26,16 +26,16 @@ func NewCampaignHandler(routerGroup fiber.Router, validator *validator.Validate,
 
 	routerGroup = routerGroup.Group("/campaign")
 
-	routerGroup.Get("active", CampaignHandler.GetActiveCampaign)
-	routerGroup.Get("get", CampaignHandler.GetCampaign)
-	routerGroup.Post("create", middleware.Authentication, CampaignHandler.CreateCampaign)
+	routerGroup.Get("/active", CampaignHandler.GetActiveCampaign)
+	routerGroup.Get("/get", CampaignHandler.GetCampaign)
+	routerGroup.Post("/create", middleware.Authentication, CampaignHandler.CreateCampaign)
 }
 
 func (h *CampaignHandler) GetActiveCampaign(ctx *fiber.Ctx) error {
 	var campaigns []entitiy.Campaign
 
 	param := dto.CampaignParam{
-		Status: "active",
+		IsActive: true,
 	}
 
 	h.campaignService.GetCampaigns(&campaigns, param)

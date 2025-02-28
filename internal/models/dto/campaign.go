@@ -4,7 +4,7 @@ import "github.com/google/uuid"
 
 type CampaignParam struct {
 	CampaignId uuid.UUID
-	Status     string
+	IsActive   bool
 	UserId     uuid.UUID
 }
 

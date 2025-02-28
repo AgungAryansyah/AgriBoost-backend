@@ -5,6 +5,7 @@ import (
 	database "AgriBoost/internal/infra/database"
 	"AgriBoost/internal/infra/env"
 	"AgriBoost/internal/infra/jwt"
+	"AgriBoost/internal/infra/middleware"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
 
@@ -22,10 +23,16 @@ func main() {
 	}
 	val := validator.New()
 	v1 := app.Group("api/v1")
+	jwt := jwt.NewJwt(*env)
+	middleware := middleware.NewMiddleware(jwt)
 
 	userRepository := repositories.NewUserRepo(db)
-	userService := services.NewUserService(userRepository, jwt.NewJwt(*env))
+	userService := services.NewUserService(userRepository, jwt)
 	handlers.NewUserHandler(v1, val, userService)
+
+	campaignRepository := repositories.NewCampaignRepo(db)
+	campaignService := services.NewCampaignService(campaignRepository, jwt)
+	handlers.NewCampaignHandler(v1, val, campaignService, middleware)
 
 	app.Listen(":8081")
 }
