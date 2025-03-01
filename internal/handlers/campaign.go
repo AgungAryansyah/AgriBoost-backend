@@ -28,7 +28,7 @@ func NewCampaignHandler(routerGroup fiber.Router, validator *validator.Validate,
 
 	routerGroup.Get("/active", CampaignHandler.GetActiveCampaign)
 	routerGroup.Get("/get", CampaignHandler.GetCampaign)
-	routerGroup.Post("/user", middleware.Authentication, CampaignHandler.GetUserCampaign)
+	routerGroup.Get("/user", middleware.Authentication, CampaignHandler.GetUserCampaign)
 	routerGroup.Post("/create", middleware.Authentication, CampaignHandler.CreateCampaign)
 }
 
