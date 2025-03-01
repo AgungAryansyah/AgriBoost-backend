@@ -28,6 +28,7 @@ func NewCampaignHandler(routerGroup fiber.Router, validator *validator.Validate,
 
 	routerGroup.Get("/active", CampaignHandler.GetActiveCampaign)
 	routerGroup.Get("/get", CampaignHandler.GetCampaign)
+	routerGroup.Post("/user", middleware.Authentication, CampaignHandler.GetUserCampaign)
 	routerGroup.Post("/create", middleware.Authentication, CampaignHandler.CreateCampaign)
 }
 
@@ -36,6 +37,18 @@ func (h *CampaignHandler) GetActiveCampaign(ctx *fiber.Ctx) error {
 
 	param := dto.CampaignParam{
 		IsActive: true,
+	}
+
+	h.campaignService.GetCampaigns(&campaigns, param)
+	return ctx.JSON(campaigns)
+}
+
+func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
+	var campaigns []entitiy.Campaign
+	var param dto.CampaignParam
+
+	if err := ctx.BodyParser(&param); err != nil {
+		return err
 	}
 
 	h.campaignService.GetCampaigns(&campaigns, param)
