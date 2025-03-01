@@ -31,7 +31,7 @@ func main() {
 	handlers.NewUserHandler(v1, val, userService)
 
 	campaignRepository := repositories.NewCampaignRepo(db)
-	campaignService := services.NewCampaignService(campaignRepository, jwt)
+	campaignService := services.NewCampaignService(campaignRepository)
 	handlers.NewCampaignHandler(v1, val, campaignService, middleware)
 
 	app.Listen(":8081")

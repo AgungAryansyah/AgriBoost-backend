@@ -1,7 +1,6 @@
 package services
 
 import (
-	"AgriBoost/internal/infra/jwt"
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
@@ -17,13 +16,11 @@ type CampaignServiceItf interface {
 
 type CampaignService struct {
 	campaignRepo repositories.CampaignRepoItf
-	jwt          jwt.JWTItf
 }
 
-func NewCampaignService(campaignRepo repositories.CampaignRepoItf, jwt jwt.JWTItf) CampaignServiceItf {
+func NewCampaignService(campaignRepo repositories.CampaignRepoItf) CampaignServiceItf {
 	return &CampaignService{
 		campaignRepo: campaignRepo,
-		jwt:          jwt,
 	}
 }
 
