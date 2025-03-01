@@ -3,9 +3,9 @@ package dto
 import "github.com/google/uuid"
 
 type CampaignParam struct {
-	CampaignId uuid.UUID
+	CampaignId uuid.UUID `json:"campaign_id" validated:"uuid"`
 	IsActive   bool
-	UserId     uuid.UUID
+	UserId     uuid.UUID `json:"user_id" validated:"uuid"`
 }
 
 type CreateCampaign struct {
