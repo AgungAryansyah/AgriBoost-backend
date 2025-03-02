@@ -5,6 +5,7 @@ import (
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/services"
+	"AgriBoost/internal/utils"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -33,34 +34,49 @@ func (d *DonationHandler) GetDonationById(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
 
 	if err := ctx.BodyParser(&param); err != nil {
-		return err
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var donation entity.Donation
-	d.donationService.GetDonationById(&donation, param)
-	return ctx.JSON(donation)
+	err := d.donationService.GetDonationById(&donation, param)
+
+	if err != nil {
+		return utils.HttpError(ctx, "failed to get data from the database", err)
+	}
+
+	return utils.HttpSuccess(ctx, "success", donation)
 }
 
 func (d *DonationHandler) GetDonationByUser(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
 
 	if err := ctx.BodyParser(&param); err != nil {
-		return err
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var donation []entity.Donation
-	d.donationService.GetDonationByUser(&donation, param)
-	return ctx.JSON(donation)
+	err := d.donationService.GetDonationByUser(&donation, param)
+
+	if err != nil {
+		return utils.HttpError(ctx, "failed to get data from the database", err)
+	}
+
+	return utils.HttpSuccess(ctx, "success", donation)
 }
 
 func (d *DonationHandler) GetDonationByCampaign(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
 
 	if err := ctx.BodyParser(&param); err != nil {
-		return err
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var donation []entity.Donation
-	d.donationService.GetDonationByCampaign(&donation, param)
-	return ctx.JSON(donation)
+	err := d.donationService.GetDonationByCampaign(&donation, param)
+
+	if err != nil {
+		return utils.HttpError(ctx, "failed to get data from the database", err)
+	}
+
+	return utils.HttpSuccess(ctx, "success", donation)
 }

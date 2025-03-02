@@ -34,5 +34,9 @@ func main() {
 	campaignService := services.NewCampaignService(campaignRepository)
 	handlers.NewCampaignHandler(v1, val, campaignService, middleware)
 
+	donationRepository := repositories.NewDonationRepo(db)
+	donationService := services.NewDonationService(donationRepository)
+	handlers.NewDonationgHandler(v1, donationService, val, middleware)
+
 	app.Listen(":8081")
 }
