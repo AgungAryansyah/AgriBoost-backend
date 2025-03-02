@@ -25,5 +25,5 @@ func (r *UserRepo) Create(user *entity.User) error {
 }
 
 func (r *UserRepo) Get(user *entity.User, userParam dto.UserParam) error {
-	return r.db.First(&user, userParam).Error
+	return r.db.First(user, userParam).Error
 }

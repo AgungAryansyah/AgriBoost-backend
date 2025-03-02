@@ -21,9 +21,9 @@ func NewDonationRepo(db *gorm.DB) DonationRepoItf {
 }
 
 func (d *DonationRepo) Get(donation *[]entity.Donation, donationParam dto.DonationParam) error {
-	return d.db.Find(&donation, donationParam).Error
+	return d.db.Find(donation, donationParam).Error
 }
 
 func (d *DonationRepo) GetOne(donation *entity.Donation, donationParam dto.DonationParam) error {
-	return d.db.First(&donation, donationParam).Error
+	return d.db.First(donation, donationParam).Error
 }

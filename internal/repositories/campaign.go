@@ -22,11 +22,11 @@ func NewCampaignRepo(db *gorm.DB) CampaignRepoItf {
 }
 
 func (r *CampaignRepo) Get(campaign *[]entity.Campaign, campaignParam dto.CampaignParam) error {
-	return r.db.Find(&campaign, campaignParam).Error
+	return r.db.Find(campaign, campaignParam).Error
 }
 
 func (r *CampaignRepo) GetOne(campaign *entity.Campaign, campaignParam dto.CampaignParam) error {
-	return r.db.First(&campaign, campaignParam).Error
+	return r.db.First(campaign, campaignParam).Error
 }
 
 func (r *CampaignRepo) Create(campaign *entity.Campaign) error {

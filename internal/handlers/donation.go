@@ -17,9 +17,9 @@ type DonationHandler struct {
 	middleware      middleware.MiddlewareItf
 }
 
-func NewDonationgHandler(routerGroup fiber.Router, donationServie services.DonationServiceItf, validator *validator.Validate, middleware middleware.MiddlewareItf) {
+func NewDonationgHandler(routerGroup fiber.Router, donationService services.DonationServiceItf, validator *validator.Validate, middleware middleware.MiddlewareItf) {
 	DonationHandler := DonationHandler{
-		donationService: donationServie,
+		donationService: donationService,
 		validator:       validator,
 		middleware:      middleware,
 	}
