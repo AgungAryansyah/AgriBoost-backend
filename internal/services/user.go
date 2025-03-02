@@ -60,5 +60,5 @@ func (s *UserService) Login(login dto.Login) (string, error) {
 		return "", errors.New("email atau password salah")
 	}
 
-	return s.jwt.GenerateToken(user.Id)
+	return s.jwt.GenerateToken(user.Id, user.IsAdmin)
 }

@@ -8,6 +8,7 @@ import (
 
 type MiddlewareItf interface {
 	Authentication(*fiber.Ctx) error
+	AdminOnly(*fiber.Ctx) error
 }
 
 type Middleware struct {

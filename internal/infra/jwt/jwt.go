@@ -12,8 +12,8 @@ import (
 )
 
 type JWTItf interface {
-	GenerateToken(id uuid.UUID) (string, error)
-	ValidateToken(token string) (uuid.UUID, error)
+	GenerateToken(id uuid.UUID, isAdmin bool) (string, error)
+	ValidateToken(token string) (uuid.UUID, bool, error)
 }
 
 type JWT struct {
@@ -38,13 +38,15 @@ func NewJwt(env env.Env) JWTItf {
 }
 
 type Claims struct {
-	Id uuid.UUID
+	Id      uuid.UUID
+	IsAdmin bool
 	jwt.RegisteredClaims
 }
 
-func (j *JWT) GenerateToken(id uuid.UUID) (string, error) {
+func (j *JWT) GenerateToken(id uuid.UUID, isAdmin bool) (string, error) {
 	claim := Claims{
-		Id: id,
+		Id:      id,
+		IsAdmin: isAdmin,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(j.expiresAt),
 		},
@@ -58,7 +60,7 @@ func (j *JWT) GenerateToken(id uuid.UUID) (string, error) {
 	return tokenString, nil
 }
 
-func (j *JWT) ValidateToken(tokenString string) (uuid.UUID, error) {
+func (j *JWT) ValidateToken(tokenString string) (uuid.UUID, bool, error) {
 	var claim Claims
 
 	token, err := jwt.ParseWithClaims(tokenString, &claim, func(t *jwt.Token) (interface{}, error) {
@@ -66,12 +68,12 @@ func (j *JWT) ValidateToken(tokenString string) (uuid.UUID, error) {
 	})
 
 	if err != nil {
-		return uuid.Nil, err
+		return uuid.Nil, false, err
 	}
 
 	if !token.Valid {
-		return uuid.Nil, errors.New("token invalid")
+		return uuid.Nil, false, errors.New("token invalid")
 	}
 
-	return claim.Id, nil
+	return claim.Id, claim.IsAdmin, nil
 }
