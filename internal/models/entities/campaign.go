@@ -15,4 +15,5 @@ type Campaign struct {
 	IsActive        bool      `json:"is_active" gorm:"type:bool;default:true"`
 	CreatedAt       time.Time `json:"created_at" gorm:"type:timestamp;default:current_timestamp"`
 	UserId          uuid.UUID `json:"user_id" gorm:"type:uuid;not null"`
+	User            User      `gorm:"foreignKey:UserId"`
 }

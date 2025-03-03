@@ -15,4 +15,5 @@ type Payment struct {
 	RawResponse   string    `json:"raw_response" gorm:"type:jsonb"`
 	CreatedAt     time.Time `json:"created_at" gorm:"type:timestamp;default:current_timestamp"`
 	UpdatedAt     time.Time `json:"updated_at" gorm:"type:timestamp;default:current_timestamp"`
+	Donation      Donation  `gorm:"foreignKey:DonationId"`
 }
