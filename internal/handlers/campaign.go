@@ -49,13 +49,13 @@ func (h *CampaignHandler) GetActiveCampaign(ctx *fiber.Ctx) error {
 }
 
 func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
-	var campaigns []entitiy.Campaign
 	var param dto.CampaignParam
 
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	var campaigns []entitiy.Campaign
 	err := h.campaignService.GetCampaigns(&campaigns, param)
 
 	if err != nil {

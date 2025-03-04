@@ -38,5 +38,9 @@ func main() {
 	donationService := services.NewDonationService(donationRepository)
 	handlers.NewDonationgHandler(v1, donationService, val, middleware)
 
+	quizRepository := repositories.NewQuizRepo(db)
+	quizService := services.NewQuizService(quizRepository)
+	handlers.NewQuizHandler(v1, quizService, val, middleware)
+
 	app.Listen(":8081")
 }
