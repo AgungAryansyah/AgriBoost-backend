@@ -20,11 +20,13 @@ type QuizServiceItf interface {
 
 type QuizService struct {
 	quizRepo repositories.QuizRepoItf
+	userRepo repositories.UserRepoItf
 }
 
-func NewQuizService(quizRepo repositories.QuizRepoItf) QuizServiceItf {
+func NewQuizService(quizRepo repositories.QuizRepoItf, userRepo repositories.UserRepoItf) QuizServiceItf {
 	return &QuizService{
 		quizRepo: quizRepo,
+		userRepo: userRepo,
 	}
 }
 
@@ -102,6 +104,13 @@ func (q *QuizService) CreateAttempt(answers dto.UserAnswersDto) error {
 		QuizId:       answers.QuizId,
 		TotalScore:   score,
 		FinishedTime: time.Now(),
+	}
+
+	var bestAttempt entity.QuizAttempt
+	if err := q.quizRepo.GetBestAttempt(&bestAttempt, attempt.UserId, attempt.QuizId); err != nil {
+		q.userRepo.AddQuizPoint(dto.UserParam{Id: attempt.AttemptId}, attempt.TotalScore)
+	} else if bestAttempt.TotalScore < score {
+		q.userRepo.AddQuizPoint(dto.UserParam{Id: attempt.AttemptId}, bestAttempt.TotalScore-attempt.TotalScore)
 	}
 
 	return q.quizRepo.CreteAttempt(&attempt)

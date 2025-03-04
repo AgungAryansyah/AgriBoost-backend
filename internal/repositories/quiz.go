@@ -14,6 +14,7 @@ type QuizRepoItf interface {
 	GetCorrectOption(correctOption *entity.QuestionOption, questionId uuid.UUID) error
 	CreteAttempt(attempt *entity.QuizAttempt) error
 	GetQuestion(question *entity.Question, questionId uuid.UUID) error
+	GetBestAttempt(attempt *entity.QuizAttempt, userId uuid.UUID, quizId uuid.UUID) error
 }
 
 type QuizRepo struct {
@@ -51,9 +52,13 @@ func (q *QuizRepo) CreteAttempt(attempt *entity.QuizAttempt) error {
 }
 
 func (q *QuizRepo) GetCorrectOption(correctOption *entity.QuestionOption, questionId uuid.UUID) error {
-	return q.db.Where("question_id = ? AND is correct = ?", questionId, true).First(&correctOption).Error
+	return q.db.Where("question_id = ? AND is_correct = ?", questionId, true).First(&correctOption).Error
 }
 
 func (q *QuizRepo) GetQuestion(question *entity.Question, questionId uuid.UUID) error {
 	return q.db.First(question, questionId).Error
+}
+
+func (q *QuizRepo) GetBestAttempt(attempt *entity.QuizAttempt, userId uuid.UUID, quizId uuid.UUID) error {
+	return q.db.Where("user_id = ? AND quiz_id = ? ORDER BY total_score DESC", userId, quizId).First(&attempt).Error
 }

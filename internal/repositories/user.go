@@ -10,6 +10,7 @@ import (
 type UserRepoItf interface {
 	Create(user *entity.User) error
 	Get(user *entity.User, userParam dto.UserParam) error
+	AddQuizPoint(userParam dto.UserParam, score int) error
 }
 
 type UserRepo struct {
@@ -26,4 +27,13 @@ func (r *UserRepo) Create(user *entity.User) error {
 
 func (r *UserRepo) Get(user *entity.User, userParam dto.UserParam) error {
 	return r.db.First(user, userParam).Error
+}
+
+func (r *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
+	var user entity.User
+	if err := r.Get(&user, userParam); err != nil {
+		return err
+	}
+	user.QuizPoint += score
+	return r.db.Save(&user).Error
 }
