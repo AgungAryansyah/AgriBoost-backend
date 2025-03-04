@@ -36,7 +36,7 @@ func main() {
 
 	donationRepository := repositories.NewDonationRepo(db)
 	donationService := services.NewDonationService(donationRepository)
-	handlers.NewDonationgHandler(v1, donationService, val, middleware)
+	handlers.NewDonationHandler(v1, donationService, val, middleware)
 
 	quizRepository := repositories.NewQuizRepo(db)
 	quizService := services.NewQuizService(quizRepository)
