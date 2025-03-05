@@ -39,7 +39,7 @@ func main() {
 	handlers.NewDonationHandler(v1, donationService, val, middleware)
 
 	quizRepository := repositories.NewQuizRepo(db)
-	quizService := services.NewQuizService(quizRepository)
+	quizService := services.NewQuizService(quizRepository, userRepository)
 	handlers.NewQuizHandler(v1, quizService, val, middleware)
 
 	app.Listen(":8081")
