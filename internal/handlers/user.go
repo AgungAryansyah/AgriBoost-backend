@@ -28,7 +28,6 @@ func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, use
 
 func (u *UserHandler) Register(ctx *fiber.Ctx) error {
 	var register dto.Register
-
 	if err := ctx.BodyParser(&register); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
@@ -37,8 +36,7 @@ func (u *UserHandler) Register(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
-	err := u.userService.Register(register)
-	if err != nil {
+	if err := u.userService.Register(register); err != nil {
 		return utils.HttpError(ctx, "failed to create user", err)
 	}
 
@@ -47,7 +45,6 @@ func (u *UserHandler) Register(ctx *fiber.Ctx) error {
 
 func (u *UserHandler) Login(ctx *fiber.Ctx) error {
 	var login dto.Login
-
 	if err := ctx.BodyParser(&login); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}

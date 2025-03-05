@@ -32,15 +32,12 @@ func NewPaymentHandler(routerGroup fiber.Router, paymentService services.Payment
 
 func (p *PaymentHandler) GetPaymentById(ctx *fiber.Ctx) error {
 	var param dto.PaymentParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var payment entity.Payment
-	err := p.paymentService.GetPaymentById(&payment, param)
-
-	if err != nil {
+	if err := p.paymentService.GetPaymentById(&payment, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -49,15 +46,12 @@ func (p *PaymentHandler) GetPaymentById(ctx *fiber.Ctx) error {
 
 func (p *PaymentHandler) GetpaymentByUser(ctx *fiber.Ctx) error {
 	var param dto.PaymentParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var payment []entity.Payment
-	err := p.paymentService.GetPaymentByUser(&payment, param)
-
-	if err != nil {
+	if err := p.paymentService.GetPaymentByUser(&payment, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -66,9 +60,7 @@ func (p *PaymentHandler) GetpaymentByUser(ctx *fiber.Ctx) error {
 
 func (p *PaymentHandler) GetAllPayment(ctx *fiber.Ctx) error {
 	var payment []entity.Payment
-	err := p.paymentService.GetAllPayment(&payment)
-
-	if err != nil {
+	if err := p.paymentService.GetAllPayment(&payment); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 

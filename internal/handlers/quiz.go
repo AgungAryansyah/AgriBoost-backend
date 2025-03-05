@@ -32,9 +32,7 @@ func NewQuizHandler(routerGroup fiber.Router, quizService services.QuizServiceIt
 
 func (q *QuizHandler) GetAllQuizzes(ctx *fiber.Ctx) error {
 	var quiz []entity.Quiz
-
-	err := q.quizService.GetAllQuizzes(&quiz)
-	if err != nil {
+	if err := q.quizService.GetAllQuizzes(&quiz); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -48,8 +46,7 @@ func (q *QuizHandler) GetQuizWithQuestionAndOption(ctx *fiber.Ctx) error {
 	}
 
 	var quiz dto.QuizDto
-	err := q.quizService.GetQuizWithQuestionAndOption(&quiz, param)
-	if err != nil {
+	if err := q.quizService.GetQuizWithQuestionAndOption(&quiz, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 

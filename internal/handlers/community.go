@@ -33,7 +33,6 @@ func NewCommunityHandler(routerGroup fiber.Router, validator *validator.Validate
 
 func (c *CommunityHandler) CreateCommunity(ctx *fiber.Ctx) error {
 	var create dto.CreateCommunity
-
 	if err := ctx.BodyParser(&create); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
@@ -51,7 +50,6 @@ func (c *CommunityHandler) CreateCommunity(ctx *fiber.Ctx) error {
 
 func (c *CommunityHandler) GetAllCommunity(ctx *fiber.Ctx) error {
 	var communities []entity.Community
-
 	if err := c.communityService.GetAllCommunity(&communities); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
@@ -61,7 +59,6 @@ func (c *CommunityHandler) GetAllCommunity(ctx *fiber.Ctx) error {
 
 func (c *CommunityHandler) GetUserCommunities(ctx *fiber.Ctx) error {
 	var param dto.UserParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
@@ -76,7 +73,6 @@ func (c *CommunityHandler) GetUserCommunities(ctx *fiber.Ctx) error {
 
 func (c *CommunityHandler) JoinCommunity(ctx *fiber.Ctx) error {
 	var param dto.JoinCommunity
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}

@@ -32,15 +32,12 @@ func NewDonationHandler(routerGroup fiber.Router, donationService services.Donat
 
 func (d *DonationHandler) GetDonationById(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var donation entity.Donation
-	err := d.donationService.GetDonationById(&donation, param)
-
-	if err != nil {
+	if err := d.donationService.GetDonationById(&donation, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -49,15 +46,12 @@ func (d *DonationHandler) GetDonationById(ctx *fiber.Ctx) error {
 
 func (d *DonationHandler) GetDonationByUser(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var donation []entity.Donation
-	err := d.donationService.GetDonationByUser(&donation, param)
-
-	if err != nil {
+	if err := d.donationService.GetDonationByUser(&donation, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -66,15 +60,12 @@ func (d *DonationHandler) GetDonationByUser(ctx *fiber.Ctx) error {
 
 func (d *DonationHandler) GetDonationByCampaign(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var donation []entity.Donation
-	err := d.donationService.GetDonationByCampaign(&donation, param)
-
-	if err != nil {
+	if err := d.donationService.GetDonationByCampaign(&donation, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 

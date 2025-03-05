@@ -32,15 +32,12 @@ func NewCampaignHandler(routerGroup fiber.Router, validator *validator.Validate,
 }
 
 func (h *CampaignHandler) GetActiveCampaign(ctx *fiber.Ctx) error {
-	var campaignsDto []dto.CampaignDto
-
 	param := dto.CampaignParam{
 		IsActive: true,
 	}
 
-	err := h.campaignService.GetCampaigns(&campaignsDto, param)
-
-	if err != nil {
+	var campaignsDto []dto.CampaignDto
+	if err := h.campaignService.GetCampaigns(&campaignsDto, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -49,15 +46,12 @@ func (h *CampaignHandler) GetActiveCampaign(ctx *fiber.Ctx) error {
 
 func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
 	var param dto.CampaignParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var campaignsDto []dto.CampaignDto
-	err := h.campaignService.GetCampaigns(&campaignsDto, param)
-
-	if err != nil {
+	if err := h.campaignService.GetCampaigns(&campaignsDto, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -66,15 +60,12 @@ func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
 
 func (h *CampaignHandler) GetCampaign(ctx *fiber.Ctx) error {
 	var param dto.CampaignParam
-
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
 	var campaignDto dto.CampaignDto
-	err := h.campaignService.GetCampaignById(&campaignDto, param)
-
-	if err != nil {
+	if err := h.campaignService.GetCampaignById(&campaignDto, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
@@ -83,7 +74,6 @@ func (h *CampaignHandler) GetCampaign(ctx *fiber.Ctx) error {
 
 func (h *CampaignHandler) CreateCampaign(ctx *fiber.Ctx) error {
 	var create dto.CreateCampaign
-
 	if err := ctx.BodyParser(&create); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
@@ -92,8 +82,7 @@ func (h *CampaignHandler) CreateCampaign(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "invalid request", err)
 	}
 
-	err := h.campaignService.CreateCampaign(create)
-	if err != nil {
+	if err := h.campaignService.CreateCampaign(create); err != nil {
 		return utils.HttpError(ctx, "failed to create campaign", err)
 	}
 
