@@ -22,14 +22,14 @@ func NewPaymentService(paymentRepo repositories.PaymentRepoItf) PaymentServiceIt
 	}
 }
 
-func (d *PaymentService) GetPaymentById(payment *entity.Payment, paymentParam dto.PaymentParam) error {
-	return d.paymentRepo.GetOne(payment, paymentParam)
+func (p *PaymentService) GetPaymentById(payment *entity.Payment, paymentParam dto.PaymentParam) error {
+	return p.paymentRepo.GetOne(payment, paymentParam)
 }
 
-func (d *PaymentService) GetPaymentByUser(payment *[]entity.Payment, paymentParam dto.PaymentParam) error {
-	return d.paymentRepo.Get(payment, paymentParam)
+func (p *PaymentService) GetPaymentByUser(payment *[]entity.Payment, paymentParam dto.PaymentParam) error {
+	return p.paymentRepo.Get(payment, paymentParam)
 }
 
-func (d *PaymentService) GetAllPayment(payment *[]entity.Payment) error {
-	return d.paymentRepo.GetAll(payment)
+func (p *PaymentService) GetAllPayment(payment *[]entity.Payment) error {
+	return p.paymentRepo.GetAll(payment)
 }

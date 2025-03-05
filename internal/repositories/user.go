@@ -23,23 +23,23 @@ func NewUserRepo(db *gorm.DB) UserRepoItf {
 	return &UserRepo{db}
 }
 
-func (r *UserRepo) Create(user *entity.User) error {
-	return r.db.Create(user).Error
+func (u *UserRepo) Create(user *entity.User) error {
+	return u.db.Create(user).Error
 }
 
-func (r *UserRepo) Get(user *entity.User, userParam dto.UserParam) error {
-	return r.db.First(user, userParam).Error
+func (u *UserRepo) Get(user *entity.User, userParam dto.UserParam) error {
+	return u.db.First(user, userParam).Error
 }
 
-func (r *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
+func (u *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
 	var user entity.User
-	if err := r.Get(&user, userParam); err != nil {
+	if err := u.Get(&user, userParam); err != nil {
 		return err
 	}
 	user.QuizPoint += score
-	return r.db.Save(&user).Error
+	return u.db.Save(&user).Error
 }
 
-func (r *UserRepo) IsUserExist(exist *bool, userId uuid.UUID) error {
-	return r.db.Model(&entity.User{}).Select("id").Where("id = ?", userId).First(&exist).Error
+func (u *UserRepo) IsUserExist(exist *bool, userId uuid.UUID) error {
+	return u.db.Model(&entity.User{}).Select("id").Where("id = ?", userId).First(&exist).Error
 }

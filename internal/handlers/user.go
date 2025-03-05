@@ -26,7 +26,7 @@ func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, use
 	routerGroup.Get("/login", UserHandler.Login)
 }
 
-func (h *UserHandler) Register(ctx *fiber.Ctx) error {
+func (u *UserHandler) Register(ctx *fiber.Ctx) error {
 	var register dto.Register
 
 	if err := ctx.BodyParser(&register); err != nil {
@@ -37,7 +37,7 @@ func (h *UserHandler) Register(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
-	err := h.userService.Register(register)
+	err := u.userService.Register(register)
 	if err != nil {
 		return utils.HttpError(ctx, "failed to create user", err)
 	}
@@ -45,18 +45,18 @@ func (h *UserHandler) Register(ctx *fiber.Ctx) error {
 	return utils.HttpSuccess(ctx, "user created", nil)
 }
 
-func (h *UserHandler) Login(ctx *fiber.Ctx) error {
+func (u *UserHandler) Login(ctx *fiber.Ctx) error {
 	var login dto.Login
 
 	if err := ctx.BodyParser(&login); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
-	if err := h.validator.Struct(login); err != nil {
+	if err := u.validator.Struct(login); err != nil {
 		return utils.HttpError(ctx, "invalid request", err)
 	}
 
-	token, err := h.userService.Login(login)
+	token, err := u.userService.Login(login)
 	if err != nil {
 		return utils.HttpError(ctx, "failed to log in", err)
 	}

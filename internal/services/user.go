@@ -28,7 +28,7 @@ func NewUserService(userRepo repositories.UserRepoItf, jwt jwt.JWTItf) UserServi
 	}
 }
 
-func (s *UserService) Register(register dto.Register) error {
+func (u *UserService) Register(register dto.Register) error {
 	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -42,15 +42,15 @@ func (s *UserService) Register(register dto.Register) error {
 		Password: string(hasedPassword),
 	}
 
-	err = s.userRepo.Create(&newUser)
+	err = u.userRepo.Create(&newUser)
 
 	return err
 }
 
-func (s *UserService) Login(login dto.Login) (string, error) {
+func (u *UserService) Login(login dto.Login) (string, error) {
 	var user entity.User
 
-	err := s.userRepo.Get(&user, dto.UserParam{Email: login.Email})
+	err := u.userRepo.Get(&user, dto.UserParam{Email: login.Email})
 	if err != nil {
 		return "", errors.New("email atau password salah")
 	}
@@ -60,5 +60,5 @@ func (s *UserService) Login(login dto.Login) (string, error) {
 		return "", errors.New("email atau password salah")
 	}
 
-	return s.jwt.GenerateToken(user.Id, user.IsAdmin)
+	return u.jwt.GenerateToken(user.Id, user.IsAdmin)
 }

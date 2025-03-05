@@ -24,14 +24,14 @@ func NewCampaignService(campaignRepo repositories.CampaignRepoItf) CampaignServi
 	}
 }
 
-func (s *CampaignService) GetCampaignById(campaign *entity.Campaign, campaignParam dto.CampaignParam) error {
-	return s.campaignRepo.GetOne(campaign, campaignParam)
+func (c *CampaignService) GetCampaignById(campaign *entity.Campaign, campaignParam dto.CampaignParam) error {
+	return c.campaignRepo.GetOne(campaign, campaignParam)
 }
 
-func (s *CampaignService) GetCampaigns(campaigns *[]entity.Campaign, campaignParam dto.CampaignParam) error {
-	return s.campaignRepo.Get(campaigns, campaignParam)
+func (c *CampaignService) GetCampaigns(campaigns *[]entity.Campaign, campaignParam dto.CampaignParam) error {
+	return c.campaignRepo.Get(campaigns, campaignParam)
 }
-func (s *CampaignService) CreateCampaign(create dto.CreateCampaign) error {
+func (c *CampaignService) CreateCampaign(create dto.CreateCampaign) error {
 	NewCampaign := entity.Campaign{
 		CampaignId:  uuid.New(),
 		Title:       create.Title,
@@ -39,5 +39,5 @@ func (s *CampaignService) CreateCampaign(create dto.CreateCampaign) error {
 		GoalAmount:  create.GoalAmount,
 		UserId:      create.UserId,
 	}
-	return s.campaignRepo.Create(&NewCampaign)
+	return c.campaignRepo.Create(&NewCampaign)
 }
