@@ -42,5 +42,9 @@ func main() {
 	quizService := services.NewQuizService(quizRepository, userRepository)
 	handlers.NewQuizHandler(v1, quizService, val, middleware)
 
+	communityRepository := repositories.NewCommunityRepo(db)
+	communityService := services.NewCommunityService(communityRepository, userRepository)
+	handlers.NewCommunityHandler(v1, val, communityService, middleware)
+
 	app.Listen(":8081")
 }

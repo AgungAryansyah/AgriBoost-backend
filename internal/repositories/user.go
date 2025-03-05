@@ -4,6 +4,7 @@ import (
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -11,6 +12,7 @@ type UserRepoItf interface {
 	Create(user *entity.User) error
 	Get(user *entity.User, userParam dto.UserParam) error
 	AddQuizPoint(userParam dto.UserParam, score int) error
+	IsUserExist(exist *bool, userId uuid.UUID) error
 }
 
 type UserRepo struct {
@@ -36,4 +38,8 @@ func (r *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
 	}
 	user.QuizPoint += score
 	return r.db.Save(&user).Error
+}
+
+func (r *UserRepo) IsUserExist(exist *bool, userId uuid.UUID) error {
+	return r.db.Model(&entity.User{}).Select("id").Where("id = ?", userId).First(&exist).Error
 }
