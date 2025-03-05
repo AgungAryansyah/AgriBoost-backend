@@ -10,7 +10,7 @@ type Quiz struct {
 	QuizId      uuid.UUID     `json:"quiz_id" gorm:"type:uuid;primaryKey"`
 	Theme       string        `json:"theme" gorm:"type:text;not null"`
 	Title       string        `json:"title" gorm:"type:text;not null"`
-	Questions   []Question    `json:"questions" gorm:"foreignKey:QuizId"`
+	Questions   []Question    `gorm:"foreignKey:QuizId"`
 	QuizAttempt []QuizAttempt `gorm:"foreignKey:QuizId"`
 }
 
@@ -20,7 +20,7 @@ type Question struct {
 	Score         int              `json:"score" gorm:"type:integer;not null;check:score>0"`
 	QuestionText  string           `json:"question_text" gorm:"type:text;not null"`
 	QuestionImage string           `json:"question_image" gorm:"type:text"`
-	Options       []QuestionOption `json:"options" gorm:"foreignKey:QuestionId"`
+	Options       []QuestionOption `gorm:"foreignKey:QuestionId"`
 }
 
 type QuestionOption struct {

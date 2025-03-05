@@ -2,6 +2,7 @@ package dto
 
 import (
 	entity "AgriBoost/internal/models/entities"
+	"sync"
 
 	"github.com/google/uuid"
 )
@@ -43,29 +44,42 @@ type UserAnswersDto struct {
 }
 
 func QuizWithOptionAndoptionToDto(quiz entity.Quiz, quizDto *QuizDto) {
-	quizDTO := QuizDto{
+	*quizDto = QuizDto{
 		QuizId:    quiz.QuizId,
 		Theme:     quiz.Theme,
 		Title:     quiz.Title,
 		Questions: make([]QuestionDto, len(quiz.Questions)),
 	}
 
+	var wg sync.WaitGroup
+	mu := sync.Mutex{}
+
 	for i, question := range quiz.Questions {
-		questionDTO := QuestionDto{
-			QuestionId:    question.QuestionId,
-			QuestionText:  question.QuestionText,
-			QuestionImage: question.QuestionImage,
-			Options:       make([]OptionDto, len(question.Options)),
-		}
+		wg.Add(1)
 
-		for j, option := range question.Options {
-			questionDTO.Options[j] = OptionDto{
-				OptionId:    option.OptionId,
-				OptionText:  option.OptionText,
-				OptionImage: option.OptionImage,
+		go func(i int, question entity.Question) {
+			defer wg.Done()
+
+			questionDto := QuestionDto{
+				QuestionId:    question.QuestionId,
+				QuestionText:  question.QuestionText,
+				QuestionImage: question.QuestionImage,
+				Options:       make([]OptionDto, len(question.Options)),
 			}
-		}
 
-		quizDTO.Questions[i] = questionDTO
+			for j, option := range question.Options {
+				questionDto.Options[j] = OptionDto{
+					OptionId:    option.OptionId,
+					OptionText:  option.OptionText,
+					OptionImage: option.OptionImage,
+				}
+			}
+
+			mu.Lock()
+			quizDto.Questions[i] = questionDto
+			mu.Unlock()
+		}(i, question)
 	}
+
+	wg.Wait()
 }

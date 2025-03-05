@@ -33,14 +33,14 @@ func (q *QuizRepo) GetAllQuizzes(quiz *[]entity.Quiz) error {
 
 func (q *QuizRepo) GetQuizWithQuestionAndOption(quizDto *dto.QuizDto, quizParam dto.QuizParam) error {
 	var quiz entity.Quiz
-	err := q.db.Preload("Question.option").First(&quiz, quizParam).Error
 
-	if err != nil {
-		return nil
+	if err := q.db.Preload("Questions.Options").Find(&quiz, quizParam).Error; err != nil {
+		return err
 	}
+
 	dto.QuizWithOptionAndoptionToDto(quiz, quizDto)
 
-	return err
+	return nil
 }
 
 func (q *QuizRepo) GetQuiz(quiz *entity.Quiz, quizParam dto.QuizParam) error {
