@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type QuizServiceItf interface {
@@ -108,9 +109,13 @@ func (q *QuizService) CreateAttempt(answers dto.UserAnswersDto) error {
 
 	var bestAttempt entity.QuizAttempt
 	if err := q.quizRepo.GetBestAttempt(&bestAttempt, attempt.UserId, attempt.QuizId); err != nil {
-		q.userRepo.AddQuizPoint(dto.UserParam{Id: attempt.AttemptId}, attempt.TotalScore)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			q.userRepo.AddQuizPoint(dto.UserParam{Id: attempt.UserId}, attempt.TotalScore)
+		} else {
+			return err
+		}
 	} else if bestAttempt.TotalScore < score {
-		q.userRepo.AddQuizPoint(dto.UserParam{Id: attempt.AttemptId}, bestAttempt.TotalScore-attempt.TotalScore)
+		q.userRepo.AddQuizPoint(dto.UserParam{Id: attempt.UserId}, score-bestAttempt.TotalScore)
 	}
 
 	return q.quizRepo.CreteAttempt(&attempt)

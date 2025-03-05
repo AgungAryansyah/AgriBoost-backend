@@ -60,5 +60,11 @@ func (q *QuizRepo) GetQuestion(question *entity.Question, questionId uuid.UUID) 
 }
 
 func (q *QuizRepo) GetBestAttempt(attempt *entity.QuizAttempt, userId uuid.UUID, quizId uuid.UUID) error {
-	return q.db.Where("user_id = ? AND quiz_id = ? ORDER BY total_score DESC", userId, quizId).First(&attempt).Error
+	var count int64
+	q.db.Model(&attempt).Where("user_id = ? AND quiz_id = ?", userId, quizId).Count(&count)
+
+	if count == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return q.db.Where("user_id = ? AND quiz_id = ?", userId, quizId).Order("total_score DESC, attempt_id").First(attempt).Error
 }
