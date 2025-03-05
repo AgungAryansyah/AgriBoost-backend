@@ -16,8 +16,8 @@ type User struct {
 	IsAdmin         bool              `json:"is_admin" gorm:"type:bool;default:false"`
 	CreatedAt       time.Time         `json:"created_at" gorm:"type:timestamp;default:current_timestamp"`
 	UpdatedAt       time.Time         `json:"updated_at" gorm:"type:timestamp;default:current_timestamp"`
-	QuizAttempt     []QuizAttempt     `gorm:"foreignKey:Id"`
-	Donation        []Donation        `gorm:"foreignKey:Id"`
-	Campaign        []Campaign        `gorm:"foreignKey:Id"`
-	CommunityMember []CommunityMember `gorm:"foreignKey:Id"`
+	QuizAttempt     []QuizAttempt     `gorm:"foreignKey:UserId"`
+	Donation        []Donation        `gorm:"foreignKey:UserId"`
+	Campaign        []Campaign        `gorm:"foreignKey:UserId"`
+	CommunityMember []CommunityMember `gorm:"foreignKey:UserId"`
 }
