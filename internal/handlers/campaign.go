@@ -3,7 +3,6 @@ package handlers
 import (
 	"AgriBoost/internal/infra/middleware"
 	"AgriBoost/internal/models/dto"
-	entitiy "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/services"
 	"AgriBoost/internal/utils"
 
@@ -33,19 +32,19 @@ func NewCampaignHandler(routerGroup fiber.Router, validator *validator.Validate,
 }
 
 func (h *CampaignHandler) GetActiveCampaign(ctx *fiber.Ctx) error {
-	var campaigns []entitiy.Campaign
+	var campaignsDto []dto.CampaignDto
 
 	param := dto.CampaignParam{
 		IsActive: true,
 	}
 
-	err := h.campaignService.GetCampaigns(&campaigns, param)
+	err := h.campaignService.GetCampaigns(&campaignsDto, param)
 
 	if err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
-	return utils.HttpSuccess(ctx, "success", campaigns)
+	return utils.HttpSuccess(ctx, "success", campaignsDto)
 }
 
 func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
@@ -55,14 +54,14 @@ func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
-	var campaigns []entitiy.Campaign
-	err := h.campaignService.GetCampaigns(&campaigns, param)
+	var campaignsDto []dto.CampaignDto
+	err := h.campaignService.GetCampaigns(&campaignsDto, param)
 
 	if err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
-	return utils.HttpSuccess(ctx, "success", campaigns)
+	return utils.HttpSuccess(ctx, "success", campaignsDto)
 }
 
 func (h *CampaignHandler) GetCampaign(ctx *fiber.Ctx) error {
@@ -72,14 +71,14 @@ func (h *CampaignHandler) GetCampaign(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
-	var campaign entitiy.Campaign
-	err := h.campaignService.GetCampaignById(&campaign, param)
+	var campaignDto dto.CampaignDto
+	err := h.campaignService.GetCampaignById(&campaignDto, param)
 
 	if err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
 
-	return utils.HttpSuccess(ctx, "success", campaign)
+	return utils.HttpSuccess(ctx, "success", campaignDto)
 }
 
 func (h *CampaignHandler) CreateCampaign(ctx *fiber.Ctx) error {

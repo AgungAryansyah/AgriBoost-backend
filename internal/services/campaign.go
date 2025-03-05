@@ -9,8 +9,8 @@ import (
 )
 
 type CampaignServiceItf interface {
-	GetCampaignById(campaign *entity.Campaign, campaignParam dto.CampaignParam) error
-	GetCampaigns(campaigns *[]entity.Campaign, campaignParam dto.CampaignParam) error
+	GetCampaignById(campaignDto *dto.CampaignDto, campaignParam dto.CampaignParam) error
+	GetCampaigns(campaignsDto *[]dto.CampaignDto, campaignParam dto.CampaignParam) error
 	CreateCampaign(create dto.CreateCampaign) error
 }
 
@@ -24,12 +24,26 @@ func NewCampaignService(campaignRepo repositories.CampaignRepoItf) CampaignServi
 	}
 }
 
-func (c *CampaignService) GetCampaignById(campaign *entity.Campaign, campaignParam dto.CampaignParam) error {
-	return c.campaignRepo.GetOne(campaign, campaignParam)
+func (c *CampaignService) GetCampaignById(campaignDto *dto.CampaignDto, campaignParam dto.CampaignParam) error {
+	var campaign entity.Campaign
+	if err := c.campaignRepo.GetOne(&campaign, campaignParam); err != nil {
+		return err
+	}
+
+	dto.CampaignToDto(campaign, campaignDto)
+
+	return nil
 }
 
-func (c *CampaignService) GetCampaigns(campaigns *[]entity.Campaign, campaignParam dto.CampaignParam) error {
-	return c.campaignRepo.Get(campaigns, campaignParam)
+func (c *CampaignService) GetCampaigns(campaignsDto *[]dto.CampaignDto, campaignParam dto.CampaignParam) error {
+	var campaigns []entity.Campaign
+	if err := c.campaignRepo.Get(&campaigns, campaignParam); err != nil {
+		return err
+	}
+
+	dto.CampaignsToDto(campaigns, campaignsDto)
+
+	return nil
 }
 func (c *CampaignService) CreateCampaign(create dto.CreateCampaign) error {
 	NewCampaign := entity.Campaign{
