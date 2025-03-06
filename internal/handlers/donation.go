@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"AgriBoost/internal/infra/middleware"
+	"AgriBoost/internal/infra/midtrans"
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/services"
@@ -9,12 +10,14 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type DonationHandler struct {
 	donationService services.DonationServiceItf
 	validator       *validator.Validate
 	middleware      middleware.MiddlewareItf
+	midtrans        midtrans.MidtransItf
 }
 
 func NewDonationHandler(routerGroup fiber.Router, donationService services.DonationServiceItf, validator *validator.Validate, middleware middleware.MiddlewareItf) {
@@ -70,4 +73,37 @@ func (d *DonationHandler) GetDonationByCampaign(ctx *fiber.Ctx) error {
 	}
 
 	return utils.HttpSuccess(ctx, "success", donation)
+}
+
+func (d *DonationHandler) Donate(ctx *fiber.Ctx) error {
+	var donate dto.Donate
+	if err := ctx.BodyParser(&donate); err != nil {
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	donationId := uuid.New()
+
+	resp, err := d.midtrans.NewTransactionToken(donationId.String())
+	if err != nil {
+		return utils.HttpError(ctx, "can't generate transaction token", err)
+	}
+
+	if err := d.donationService.Donate(donate, donationId); err != nil {
+		return utils.HttpError(ctx, "can't store donation into the database", err)
+	}
+
+	return utils.HttpSuccess(ctx, "success", resp)
+}
+
+func (d *DonationHandler) HandleMidtransWebhook(ctx *fiber.Ctx) error {
+	var PaymentDetails map[string]interface{}
+	if err := ctx.BodyParser(&PaymentDetails); err != nil {
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := d.donationService.HandleMidtransWebhook(PaymentDetails); err != nil {
+		return utils.HttpError(ctx, "can't process payment details", err)
+	}
+
+	return utils.HttpSuccess(ctx, "success", nil)
 }
