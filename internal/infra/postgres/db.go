@@ -2,6 +2,7 @@ package database
 
 import (
 	"AgriBoost/internal/infra/env"
+	entity "AgriBoost/internal/models/entities"
 	"errors"
 	"fmt"
 
@@ -30,6 +31,20 @@ func Connect(env env.Env) (*gorm.DB, error) {
 	if err != nil {
 		return nil, errors.New("can not connect to databse")
 	}
+
+	migrate := []interface{}{
+		&entity.User{},
+		&entity.Quiz{},
+		&entity.Question{},
+		&entity.QuestionOption{},
+		&entity.QuizAttempt{},
+		&entity.Donation{},
+		&entity.Community{},
+		&entity.CommunityMember{},
+		&entity.Campaign{},
+		&entity.Article{},
+	}
+	db.AutoMigrate(migrate...)
 
 	return db, nil
 }
