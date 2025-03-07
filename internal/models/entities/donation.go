@@ -15,5 +15,4 @@ type Donation struct {
 	DonationDate time.Time `json:"donation_date" gorm:"type:timestamp;default:current_timestamp"`
 	User         User      `gorm:"foreignKey:UserId"`
 	Campaign     Campaign  `gorm:"foreignKey:CampaignId"`
-	Payment      []Payment `gorm:"foreignKey:DonationId"`
 }

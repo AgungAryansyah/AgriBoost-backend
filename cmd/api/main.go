@@ -46,5 +46,9 @@ func main() {
 	communityService := services.NewCommunityService(communityRepository, userRepository)
 	handlers.NewCommunityHandler(v1, val, communityService, middleware)
 
+	articleRepository := repositories.NewArticleRepo(db)
+	articleService := services.NewArticleService(articleRepository)
+	handlers.NewArticleHandler(v1, articleService, val, middleware)
+
 	app.Listen(":8081")
 }
