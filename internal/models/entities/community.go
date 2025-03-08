@@ -6,7 +6,7 @@ import (
 
 type Community struct {
 	CommunityID     uuid.UUID         `json:"community_id" gorm:"type:uuid;primaryKey"`
-	Name            string            `json:"name" gorm:"type:varchar(255);not null"`
+	Name            string            `json:"name" gorm:"type:varchar(255);not null;unique"`
 	Description     string            `json:"description" gorm:"type:text;not null"`
 	CommunityMember []CommunityMember `gorm:"foreignKey:CommunityId"`
 }

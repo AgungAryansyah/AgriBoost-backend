@@ -35,6 +35,6 @@ type QuizAttempt struct {
 	AttemptId    uuid.UUID `json:"attempt_id" gorm:"type:uuid;primaryKey"`
 	UserId       uuid.UUID `json:"user_id" gorm:"type:uuid;not null"`
 	QuizId       uuid.UUID `json:"quiz_id" gorm:"type:uuid;not null"`
-	TotalScore   int       `json:"total_score" gorm:"type:integer;not null;check:amount>0"`
+	TotalScore   int       `json:"total_score" gorm:"type:integer;not null"`
 	FinishedTime time.Time `json:"finished_time" gorm:"type:timestamp;default:current_timestamp"`
 }
