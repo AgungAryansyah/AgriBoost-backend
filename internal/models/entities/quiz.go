@@ -8,8 +8,8 @@ import (
 
 type Quiz struct {
 	QuizId      uuid.UUID     `json:"quiz_id" gorm:"type:uuid;primaryKey"`
-	Theme       string        `json:"theme" gorm:"type:text;not null"`
-	Title       string        `json:"title" gorm:"type:text;not null"`
+	Theme       string        `json:"theme" gorm:"type:varchar(50);not null"`
+	Title       string        `json:"title" gorm:"type:varchar(50);not null"`
 	Questions   []Question    `gorm:"foreignKey:QuizId"`
 	QuizAttempt []QuizAttempt `gorm:"foreignKey:QuizId"`
 }
