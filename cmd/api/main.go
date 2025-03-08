@@ -8,6 +8,7 @@ import (
 	database "AgriBoost/internal/infra/postgres"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
+	"os"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -50,5 +51,6 @@ func main() {
 	articleService := services.NewArticleService(articleRepository)
 	handlers.NewArticleHandler(v1, articleService, val, middleware)
 
-	app.Listen(":8081")
+	port := os.Getenv("APP_PORT")
+	app.Listen(":" + port)
 }
