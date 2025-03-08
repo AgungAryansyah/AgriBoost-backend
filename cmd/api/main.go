@@ -2,10 +2,10 @@ package main
 
 import (
 	"AgriBoost/internal/handlers"
-	database "AgriBoost/internal/infra/database"
 	"AgriBoost/internal/infra/env"
 	"AgriBoost/internal/infra/jwt"
 	"AgriBoost/internal/infra/middleware"
+	database "AgriBoost/internal/infra/postgres"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
 
