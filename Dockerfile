@@ -1,4 +1,4 @@
-FROM golang:1.22.5-alpine as builder
+FROM golang:1.24.1-alpine3.21 as builder
 
 WORKDIR /app
 
@@ -13,12 +13,13 @@ ENV CGO_ENABLED=0
 WORKDIR /app/cmd/api
 RUN go build -ldflags="-s -w" -o /app/main .
 
-FROM scratch
+FROM alpine:3.21
 
 WORKDIR /app
 
 COPY --from=builder /app/main .
+COPY .env .
 
-EXPOSE    
+EXPOSE 8083
 
-CMD ["sh", "-c", "./main"]
+CMD ["./main"]

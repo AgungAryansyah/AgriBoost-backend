@@ -8,6 +8,7 @@ import (
 	database "AgriBoost/internal/infra/postgres"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
+	"errors"
 	"os"
 
 	"github.com/go-playground/validator/v10"
@@ -18,6 +19,10 @@ func main() {
 	app := fiber.New()
 
 	env := env.NewEnv()
+	if env == nil {
+		panic(errors.New("tidak ada env"))
+	}
+
 	db, err := database.Connect(*env)
 	if err != nil {
 		panic(err)
@@ -52,5 +57,6 @@ func main() {
 	handlers.NewArticleHandler(v1, articleService, val, middleware)
 
 	port := os.Getenv("APP_PORT")
-	app.Listen(":" + port)
+	add := os.Getenv("APP_ADDRESS")
+	app.Listen(add + ":" + port)
 }

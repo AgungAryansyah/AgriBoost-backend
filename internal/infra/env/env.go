@@ -1,6 +1,7 @@
 package env
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -25,6 +26,7 @@ func NewEnv() *Env {
 	err := godotenv.Load()
 
 	if err != nil {
+		fmt.Print("no env")
 		return nil
 	}
 
