@@ -20,11 +20,12 @@ type DonationHandler struct {
 	midtrans        midtrans.MidtransItf
 }
 
-func NewDonationHandler(routerGroup fiber.Router, donationService services.DonationServiceItf, validator *validator.Validate, middleware middleware.MiddlewareItf) {
+func NewDonationHandler(routerGroup fiber.Router, donationService services.DonationServiceItf, validator *validator.Validate, middleware middleware.MiddlewareItf, midtrans midtrans.MidtransItf) {
 	DonationHandler := DonationHandler{
 		donationService: donationService,
 		validator:       validator,
 		middleware:      middleware,
+		midtrans:        midtrans,
 	}
 
 	routerGroup = routerGroup.Group("/donation")
@@ -101,16 +102,16 @@ func (d *DonationHandler) Donate(ctx *fiber.Ctx) error {
 
 	donationId := uuid.New()
 
-	url, err := d.midtrans.NewTransactionToken(donationId.String(), int64(donate.Amount))
-	if err != nil {
-		return utils.HttpError(ctx, "can't generate transaction token", err)
+	req, _ := d.midtrans.NewTransactionToken(donationId.String(), int64(donate.Amount))
+	if req == nil {
+		return utils.HttpError(ctx, "can't get transaction token", nil)
 	}
 
 	if err := d.donationService.Donate(donate, donationId); err != nil {
 		return utils.HttpError(ctx, "can't store donation into the database", err)
 	}
 
-	return utils.HttpSuccess(ctx, "success", url)
+	return utils.HttpSuccess(ctx, "success", req)
 }
 
 func (d *DonationHandler) HandleMidtransWebhook(ctx *fiber.Ctx) error {
