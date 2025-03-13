@@ -83,3 +83,16 @@ func (c *CommunityHandler) JoinCommunity(ctx *fiber.Ctx) error {
 
 	return utils.HttpSuccess(ctx, "successfully joined a community", nil)
 }
+
+func (c *CommunityHandler) LeaveCommunity(ctx *fiber.Ctx) error {
+	var leave dto.LeaveCommunity
+	if err := ctx.BodyParser(&leave); err != nil {
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := c.communityService.LeaveCommunity(leave); err != nil {
+		return utils.HttpError(ctx, "failed to join community", err)
+	}
+
+	return utils.HttpSuccess(ctx, "successfully leave a community", nil)
+}

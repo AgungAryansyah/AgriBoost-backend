@@ -14,6 +14,8 @@ type CommunityRepoItf interface {
 	GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error
 	CreateCommunityMember(communityMember *entity.CommunityMember) error
 	IsCommunityExist(exist *bool, communityId uuid.UUID) error
+	RemoveCommunityMember(member *entity.CommunityMember) error
+	GetACommunityMember(member *entity.CommunityMember, userId uuid.UUID, communityId uuid.UUID) error
 }
 
 type CommunityRepo struct {
@@ -42,4 +44,12 @@ func (c *CommunityRepo) CreateCommunityMember(communityMember *entity.CommunityM
 
 func (c *CommunityRepo) IsCommunityExist(exist *bool, communityId uuid.UUID) error {
 	return c.db.Model(&entity.Community{}).Select("community_id").Where("community_id = ?", communityId).First(&exist).Error
+}
+
+func (c *CommunityRepo) RemoveCommunityMember(member *entity.CommunityMember) error {
+	return c.db.Delete(member).Error
+}
+
+func (c *CommunityRepo) GetACommunityMember(member *entity.CommunityMember, userId uuid.UUID, communityId uuid.UUID) error {
+	return c.db.First(member, userId, communityId).Error
 }
