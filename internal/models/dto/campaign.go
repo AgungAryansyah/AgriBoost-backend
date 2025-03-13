@@ -9,16 +9,16 @@ import (
 )
 
 type CampaignParam struct {
-	CampaignId uuid.UUID `json:"campaign_id" validated:"uuid"`
+	CampaignId uuid.UUID `json:"campaign_id" validate:"uuid"`
 	IsActive   bool
-	UserId     uuid.UUID `json:"user_id" validated:"uuid"`
+	UserId     uuid.UUID `json:"user_id" validate:"uuid"`
 }
 
 type CreateCampaign struct {
-	Title       string    `json:"title" validated:"required,min=3"`
-	Description string    `json:"description" validated:"required,min=10"`
-	GoalAmount  int       `json:"goal_amount" validated:"required,min=1000"`
-	UserId      uuid.UUID `json:"user_id" validated:"required,uuid"`
+	Title       string    `json:"title" validate:"required,min=3"`
+	Description string    `json:"description" validate:"required,min=10"`
+	GoalAmount  int       `json:"goal_amount" validate:"required,min=1000"`
+	UserId      uuid.UUID `json:"user_id" validate:"required,uuid"`
 }
 
 type CampaignDto struct {
