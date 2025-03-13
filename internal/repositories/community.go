@@ -51,5 +51,5 @@ func (c *CommunityRepo) RemoveCommunityMember(member *entity.CommunityMember) er
 }
 
 func (c *CommunityRepo) GetACommunityMember(member *entity.CommunityMember, userId uuid.UUID, communityId uuid.UUID) error {
-	return c.db.First(member, userId, communityId).Error
+	return c.db.Where("user_id = ? AND community_id = ?", userId, communityId).First(member).Error
 }
