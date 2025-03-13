@@ -94,7 +94,11 @@ func (m *MessageHandler) MessageWebSocketHandler(c *websocket.Conn) {
 			break
 		}
 
-		if err := m.messageService.SendMessage(msg, roomUUID, userUUID); err != nil {
+		if err := m.messageService.SendMessage(dto.SendMessage{
+			Message:     msg,
+			CommunityId: roomUUID,
+			UserId:      userUUID,
+		}); err != nil {
 			return
 		}
 
