@@ -2,7 +2,6 @@ package midtrans
 
 import (
 	"AgriBoost/internal/infra/env"
-	"encoding/base64"
 
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
@@ -18,8 +17,7 @@ type Midtrans struct {
 
 func NewMidtrans(env env.Env) MidtransItf {
 	client := snap.Client{}
-	key := base64.StdEncoding.EncodeToString([]byte(env.MIDTRANS_SERVER_KEY))
-	client.New(key, midtrans.Sandbox)
+	client.New(env.MIDTRANS_SERVER_KEY, midtrans.Sandbox)
 
 	return &Midtrans{
 		Client: client,
