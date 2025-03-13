@@ -49,17 +49,17 @@ func (c *CommunityService) GetUserCommunities(community *[]entity.Community, use
 }
 
 func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error {
-	var userExist bool
-	if err := c.userRepo.IsUserExist(&userExist, joinCommunity.UserID); err != nil {
+	var user *entity.User
+	if err := c.userRepo.IsUserExist(user, joinCommunity.UserID); err != nil {
 		return err
 	}
 
-	var communityExist bool
-	if err := c.communityRepo.IsCommunityExist(&communityExist, joinCommunity.CommunityID); err != nil {
+	var community *entity.Community
+	if err := c.communityRepo.IsCommunityExist(community, joinCommunity.CommunityID); err != nil {
 		return err
 	}
 
-	if !userExist || !communityExist {
+	if user == nil || community == nil {
 		return errors.New("user or community doesn't exist")
 	}
 
@@ -82,5 +82,15 @@ func (c *CommunityService) LeaveCommunity(leave dto.LeaveCommunity) error {
 }
 
 func (c *CommunityService) IsCommunityExist(exist *bool, comunityId uuid.UUID) error {
-	return c.communityRepo.IsCommunityExist(exist, comunityId)
+	var community *entity.Community
+	if err := c.communityRepo.IsCommunityExist(community, comunityId); err != nil {
+		return err
+	}
+
+	if community == nil {
+		return errors.New("community doesn't exist")
+	}
+
+	*exist = true
+	return nil
 }
