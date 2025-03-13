@@ -34,8 +34,10 @@ func (c *CommunityRepo) GetAllCommunity(community *[]entity.Community) error {
 	return c.db.Find(community).Error
 }
 
-func (c *CommunityRepo) GetUserCommunities(community *[]entity.Community, communityParam dto.CommunityParam) error {
-	return c.db.Find(community, communityParam).Error
+func (c *CommunityRepo) GetUserCommunities(communities *[]entity.Community, communityParam dto.CommunityParam) error {
+	return c.db.Joins("JOIN community_members cm ON cm.community_id = communities.community_id").
+		Where("cm.user_id = ?", communityParam.UserID).
+		Find(&communities).Error
 }
 
 func (c *CommunityRepo) CreateCommunityMember(communityMember *entity.CommunityMember) error {
