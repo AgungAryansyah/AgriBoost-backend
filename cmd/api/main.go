@@ -13,11 +13,18 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
 	app := fiber.New()
 	app.Use(middleware.RateLimiter())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "https://api.sandbox.midtrans.com",
+		AllowMethods:     "GET, POST, DELETE",
+		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
+		AllowCredentials: true,
+	}))
 
 	env := env.NewEnv()
 	if env == nil {
