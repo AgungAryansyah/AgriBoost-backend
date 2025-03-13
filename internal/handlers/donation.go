@@ -32,6 +32,7 @@ func NewDonationHandler(routerGroup fiber.Router, donationService services.Donat
 	routerGroup.Get("/user", middleware.Authentication, DonationHandler.GetDonationByUser)
 	routerGroup.Get("/campaign", DonationHandler.GetDonationByCampaign)
 	routerGroup.Post("/donate", middleware.Authentication, DonationHandler.Donate)
+	routerGroup.Patch("/webhook", DonationHandler.HandleMidtransWebhook)
 }
 
 func (d *DonationHandler) GetDonationById(ctx *fiber.Ctx) error {
