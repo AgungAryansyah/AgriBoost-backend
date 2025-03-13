@@ -8,7 +8,7 @@ import (
 )
 
 type MidtransItf interface {
-	NewTransactionToken(orderId string) (*snap.Response, error)
+	NewTransactionToken(orderId string, amount int64) (*snap.Response, error)
 }
 
 type Midtrans struct {
@@ -24,14 +24,11 @@ func NewMidtrans(env env.Env) MidtransItf {
 	}
 }
 
-func (m *Midtrans) NewTransactionToken(orderId string) (*snap.Response, error) {
+func (m *Midtrans) NewTransactionToken(orderId string, amount int64) (*snap.Response, error) {
 	req := &snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
 			OrderID:  orderId,
-			GrossAmt: 100000,
-		},
-		CreditCard: &snap.CreditCardDetails{
-			Secure: true,
+			GrossAmt: amount,
 		},
 	}
 

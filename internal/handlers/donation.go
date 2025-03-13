@@ -101,7 +101,7 @@ func (d *DonationHandler) Donate(ctx *fiber.Ctx) error {
 
 	donationId := uuid.New()
 
-	resp, err := d.midtrans.NewTransactionToken(donationId.String())
+	resp, err := d.midtrans.NewTransactionToken(donationId.String(), int64(donate.Amount))
 	if err != nil {
 		return utils.HttpError(ctx, "can't generate transaction token", err)
 	}
