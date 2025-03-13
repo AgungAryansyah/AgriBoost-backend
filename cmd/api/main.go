@@ -57,6 +57,10 @@ func main() {
 	articleService := services.NewArticleService(articleRepository)
 	handlers.NewArticleHandler(v1, articleService, val, middleware)
 
+	messageRepository := repositories.NewMessageRepo(db)
+	messageService := services.NewMessageService(messageRepository)
+	handlers.NewMessageHandler(v1, messageService, communityService, userService, val, middleware)
+
 	port := os.Getenv("APP_PORT")
 	add := os.Getenv("APP_ADDRESS")
 	app.Listen(add + ":" + port)
