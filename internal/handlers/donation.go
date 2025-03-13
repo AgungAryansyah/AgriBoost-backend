@@ -31,7 +31,7 @@ func NewDonationHandler(routerGroup fiber.Router, donationService services.Donat
 	routerGroup.Get("/id", DonationHandler.GetDonationById)
 	routerGroup.Get("/user", middleware.Authentication, DonationHandler.GetDonationByUser)
 	routerGroup.Get("/campaign", DonationHandler.GetDonationByCampaign)
-	routerGroup.Post("/donate", DonationHandler.Donate)
+	routerGroup.Post("/donate", middleware.Authentication, DonationHandler.Donate)
 }
 
 func (d *DonationHandler) GetDonationById(ctx *fiber.Ctx) error {
