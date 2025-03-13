@@ -101,7 +101,7 @@ func (d *DonationHandler) Donate(ctx *fiber.Ctx) error {
 
 	donationId := uuid.New()
 
-	resp, err := d.midtrans.NewTransactionToken(donationId.String(), int64(donate.Amount))
+	url, err := d.midtrans.NewTransactionToken(donationId.String(), int64(donate.Amount))
 	if err != nil {
 		return utils.HttpError(ctx, "can't generate transaction token", err)
 	}
@@ -110,7 +110,7 @@ func (d *DonationHandler) Donate(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't store donation into the database", err)
 	}
 
-	return utils.HttpSuccess(ctx, "success", resp)
+	return utils.HttpSuccess(ctx, "success", url)
 }
 
 func (d *DonationHandler) HandleMidtransWebhook(ctx *fiber.Ctx) error {
