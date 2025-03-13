@@ -15,7 +15,6 @@ type JoinCommunity struct {
 type CommunityParam struct {
 	CommunityID uuid.UUID `json:"community_id" validate:"uuid"`
 	UserID      uuid.UUID `json:"user_id" validate:"uuid"`
-	Name        string    `json:"name" validate:"min=6"`
 }
 
 type LeaveCommunity struct {

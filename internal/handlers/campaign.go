@@ -90,10 +90,6 @@ func (h *CampaignHandler) CreateCampaign(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "invalid data", err)
 	}
 
-	if err := h.validator.Struct(create); err != nil {
-		return utils.HttpError(ctx, "invalid request", err)
-	}
-
 	if err := h.campaignService.CreateCampaign(create); err != nil {
 		return utils.HttpError(ctx, "failed to create campaign", err)
 	}
