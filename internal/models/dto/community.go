@@ -8,8 +8,8 @@ type CreateCommunity struct {
 }
 
 type JoinCommunity struct {
-	CommunityID uuid.UUID `json:"community_id" validate:"uuid"`
-	UserID      uuid.UUID `json:"user_id" validate:"uuid"`
+	CommunityID uuid.UUID `json:"community_id" validate:"required,uuid"`
+	UserID      uuid.UUID `json:"user_id" validate:"required,uuid"`
 }
 
 type CommunityParam struct {
@@ -19,6 +19,6 @@ type CommunityParam struct {
 }
 
 type LeaveCommunity struct {
-	CommunityID uuid.UUID `json:"community_id" validate:"uuid"`
-	UserID      uuid.UUID `json:"user_id" validate:"uuid"`
+	CommunityID uuid.UUID `json:"community_id" validate:"required,uuid"`
+	UserID      uuid.UUID `json:"user_id" validate:"required,uuid"`
 }

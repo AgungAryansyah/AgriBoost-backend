@@ -9,7 +9,7 @@ type DonationParam struct {
 }
 
 type Donate struct {
-	CampaignId uuid.UUID `json:"campaign_id" validate:"uuid"`
-	UserId     uuid.UUID `json:"user_id" validate:"uuid"`
-	Amount     int       `json:"amount" validate:"min=1000"`
+	CampaignId uuid.UUID `json:"campaign_id" validate:"required,uuid"`
+	UserId     uuid.UUID `json:"user_id" validate:"required,uuid"`
+	Amount     int       `json:"amount" validate:"required,min=1000"`
 }

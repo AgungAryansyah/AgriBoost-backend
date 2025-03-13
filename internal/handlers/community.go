@@ -39,6 +39,10 @@ func (c *CommunityHandler) CreateCommunity(ctx *fiber.Ctx) error {
 	}
 
 	if err := c.validator.Struct(create); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
+	if err := c.validator.Struct(create); err != nil {
 		return utils.HttpError(ctx, "invalid request", err)
 	}
 
@@ -64,6 +68,10 @@ func (c *CommunityHandler) GetUserCommunities(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := c.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var communities []entity.Community
 	if err := c.communityService.GetUserCommunities(&communities, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
@@ -78,6 +86,10 @@ func (c *CommunityHandler) JoinCommunity(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := c.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	if err := c.communityService.JoinCommunity(param); err != nil {
 		return utils.HttpError(ctx, "failed to join community", err)
 	}
@@ -89,6 +101,10 @@ func (c *CommunityHandler) LeaveCommunity(ctx *fiber.Ctx) error {
 	var leave dto.LeaveCommunity
 	if err := ctx.BodyParser(&leave); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := c.validator.Struct(leave); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	if err := c.communityService.LeaveCommunity(leave); err != nil {

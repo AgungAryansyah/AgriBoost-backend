@@ -41,6 +41,10 @@ func (d *DonationHandler) GetDonationById(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := d.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var donation entity.Donation
 	if err := d.donationService.GetDonationById(&donation, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
@@ -53,6 +57,10 @@ func (d *DonationHandler) GetDonationByUser(ctx *fiber.Ctx) error {
 	var param dto.DonationParam
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := d.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	var donation []entity.Donation
@@ -69,6 +77,10 @@ func (d *DonationHandler) GetDonationByCampaign(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := d.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var donation []entity.Donation
 	if err := d.donationService.GetDonationByCampaign(&donation, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
@@ -81,6 +93,10 @@ func (d *DonationHandler) Donate(ctx *fiber.Ctx) error {
 	var donate dto.Donate
 	if err := ctx.BodyParser(&donate); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := d.validator.Struct(donate); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	donationId := uuid.New()

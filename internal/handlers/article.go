@@ -44,6 +44,10 @@ func (a *ArticleHandler) GetArticle(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := a.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var article entity.Article
 	if err := a.articleService.Get(&article, &param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
