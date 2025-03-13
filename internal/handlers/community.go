@@ -29,6 +29,7 @@ func NewCommunityHandler(routerGroup fiber.Router, validator *validator.Validate
 	routerGroup.Get("/all", middleware.Authentication, communityHandler.GetAllCommunity)
 	routerGroup.Get("/user", middleware.Authentication, communityHandler.GetUserCommunities)
 	routerGroup.Post("/join", middleware.Authentication, communityHandler.JoinCommunity)
+	routerGroup.Delete("/leave", middleware.Authentication, communityHandler.LeaveCommunity)
 }
 
 func (c *CommunityHandler) CreateCommunity(ctx *fiber.Ctx) error {
@@ -82,4 +83,17 @@ func (c *CommunityHandler) JoinCommunity(ctx *fiber.Ctx) error {
 	}
 
 	return utils.HttpSuccess(ctx, "successfully joined a community", nil)
+}
+
+func (c *CommunityHandler) LeaveCommunity(ctx *fiber.Ctx) error {
+	var leave dto.LeaveCommunity
+	if err := ctx.BodyParser(&leave); err != nil {
+		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := c.communityService.LeaveCommunity(leave); err != nil {
+		return utils.HttpError(ctx, "failed to join community", err)
+	}
+
+	return utils.HttpSuccess(ctx, "successfully leave a community", nil)
 }

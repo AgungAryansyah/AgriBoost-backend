@@ -14,6 +14,7 @@ type CommunityServiceItf interface {
 	GetAllCommunity(community *[]entity.Community) error
 	GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error
 	JoinCommunity(joinCommunity dto.JoinCommunity) error
+	LeaveCommunity(leave dto.LeaveCommunity) error
 }
 
 type CommunityService struct {
@@ -68,4 +69,13 @@ func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error 
 	}
 
 	return c.communityRepo.CreateCommunityMember(&newCommunityMember)
+}
+
+func (c *CommunityService) LeaveCommunity(leave dto.LeaveCommunity) error {
+	var communityMember entity.CommunityMember
+	if err := c.communityRepo.GetACommunityMember(&communityMember, leave.UserID, leave.CommunityID); err != nil {
+		return err
+	}
+
+	return c.communityRepo.RemoveCommunityMember(&communityMember)
 }
