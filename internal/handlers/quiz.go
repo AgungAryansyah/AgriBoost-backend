@@ -45,6 +45,10 @@ func (q *QuizHandler) GetQuizWithQuestionAndOption(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := q.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var quiz dto.QuizDto
 	if err := q.quizService.GetQuizWithQuestionAndOption(&quiz, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
@@ -57,6 +61,10 @@ func (q *QuizHandler) CreateAttempt(ctx *fiber.Ctx) error {
 	var answers dto.UserAnswersDto
 	if err := ctx.BodyParser(&answers); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := q.validator.Struct(answers); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	if err := q.quizService.CreateAttempt(answers); err != nil {

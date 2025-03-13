@@ -42,6 +42,10 @@ func (m *MessageHandler) GetMessages(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := m.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var messages []dto.MessageDto
 	if err := m.messageService.GetMessages(&messages, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
@@ -94,7 +98,17 @@ func (m *MessageHandler) MessageWebSocketHandler(c *websocket.Conn) {
 			break
 		}
 
-		if err := m.messageService.SendMessage(msg, roomUUID, userUUID); err != nil {
+		send := dto.SendMessage{
+			Message:     msg,
+			CommunityId: roomUUID,
+			UserId:      userUUID,
+		}
+
+		if err := m.validator.Struct(send); err != nil {
+			return
+		}
+
+		if err := m.messageService.SendMessage(send); err != nil {
 			return
 		}
 

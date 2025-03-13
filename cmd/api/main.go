@@ -8,16 +8,24 @@ import (
 	database "AgriBoost/internal/infra/postgres"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
+	"AgriBoost/internal/utils"
 	"errors"
 	"os"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
 	app := fiber.New()
 	app.Use(middleware.RateLimiter())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "https://api.sandbox.midtrans.com",
+		AllowMethods:     "GET, POST, DELETE",
+		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
+		AllowCredentials: true,
+	}))
 
 	env := env.NewEnv()
 	if env == nil {
@@ -29,6 +37,8 @@ func main() {
 		panic(err)
 	}
 	val := validator.New()
+	utils.RegisterValidator(val)
+
 	v1 := app.Group("api/v1")
 	jwt := jwt.NewJwt(*env)
 	middleware := middleware.NewMiddleware(jwt)
@@ -56,6 +66,10 @@ func main() {
 	articleRepository := repositories.NewArticleRepo(db)
 	articleService := services.NewArticleService(articleRepository)
 	handlers.NewArticleHandler(v1, articleService, val, middleware)
+
+	messageRepository := repositories.NewMessageRepo(db)
+	messageService := services.NewMessageService(messageRepository)
+	handlers.NewMessageHandler(v1, messageService, communityService, userService, val, middleware)
 
 	port := os.Getenv("APP_PORT")
 	add := os.Getenv("APP_ADDRESS")

@@ -12,7 +12,7 @@ type UserRepoItf interface {
 	Create(user *entity.User) error
 	Get(user *entity.User, userParam dto.UserParam) error
 	AddQuizPoint(userParam dto.UserParam, score int) error
-	IsUserExist(exist *bool, userId uuid.UUID) error
+	IsUserExist(user *entity.User, userId uuid.UUID) error
 	IsUserExistName(userName *string, userId uuid.UUID) error
 }
 
@@ -41,8 +41,8 @@ func (u *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
 	return u.db.Save(&user).Error
 }
 
-func (u *UserRepo) IsUserExist(exist *bool, userId uuid.UUID) error {
-	return u.db.Model(&entity.User{}).Select("id").Where("id = ?", userId).First(&exist).Error
+func (u *UserRepo) IsUserExist(user *entity.User, userId uuid.UUID) error {
+	return u.db.Model(&entity.User{}).Select("id").Where("id = ?", userId).First(&user).Error
 }
 
 func (u *UserRepo) IsUserExistName(userName *string, userId uuid.UUID) error {

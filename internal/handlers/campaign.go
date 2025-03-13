@@ -50,6 +50,10 @@ func (h *CampaignHandler) GetUserCampaign(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
+	if err := h.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
+	}
+
 	var campaignsDto []dto.CampaignDto
 	if err := h.campaignService.GetCampaigns(&campaignsDto, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
@@ -62,6 +66,10 @@ func (h *CampaignHandler) GetCampaign(ctx *fiber.Ctx) error {
 	var param dto.CampaignParam
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	}
+
+	if err := h.validator.Struct(param); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	var campaignDto dto.CampaignDto
@@ -79,7 +87,7 @@ func (h *CampaignHandler) CreateCampaign(ctx *fiber.Ctx) error {
 	}
 
 	if err := h.validator.Struct(create); err != nil {
-		return utils.HttpError(ctx, "invalid request", err)
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	if err := h.campaignService.CreateCampaign(create); err != nil {

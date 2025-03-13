@@ -13,13 +13,13 @@ type MessageDto struct {
 }
 
 type MessageParam struct {
-	CommunityId uuid.UUID `json:"community_id"`
-	Page        int       `json:"page"`
-	PageSize    int       `json:"page_size"`
+	CommunityId uuid.UUID `json:"community_id" validate:"required,uuid"`
+	Page        int       `json:"page" validate:"required,int"`
+	PageSize    int       `json:"page_size" validate:"required,int"`
 }
 
 type SendMessage struct {
-	Message     string    `json:"message"`
-	UserId      uuid.UUID `json:"user_id"`
-	CommunityId uuid.UUID `json:"community_id"`
+	Message     string    `validate:"required,string"`
+	UserId      uuid.UUID `validate:"required,uuid"`
+	CommunityId uuid.UUID `validate:"required,uuid"`
 }

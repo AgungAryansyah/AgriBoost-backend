@@ -4,7 +4,6 @@ import (
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
-	"errors"
 
 	"github.com/google/uuid"
 )
@@ -12,7 +11,7 @@ import (
 type CommunityServiceItf interface {
 	CreateCommunity(createCommunity dto.CreateCommunity) error
 	GetAllCommunity(community *[]entity.Community) error
-	GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error
+	GetUserCommunities(community *[]entity.Community, communityParam dto.CommunityParam) error
 	JoinCommunity(joinCommunity dto.JoinCommunity) error
 	LeaveCommunity(leave dto.LeaveCommunity) error
 	IsCommunityExist(exist *bool, comunityId uuid.UUID) error
@@ -44,23 +43,19 @@ func (c *CommunityService) GetAllCommunity(community *[]entity.Community) error 
 	return c.communityRepo.GetAllCommunity(community)
 }
 
-func (c *CommunityService) GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error {
-	return c.communityRepo.GetUserCommunities(community, userParam)
+func (c *CommunityService) GetUserCommunities(community *[]entity.Community, communityParam dto.CommunityParam) error {
+	return c.communityRepo.GetUserCommunities(community, communityParam)
 }
 
 func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error {
-	var userExist bool
-	if err := c.userRepo.IsUserExist(&userExist, joinCommunity.UserID); err != nil {
+	var user *entity.User
+	if err := c.userRepo.IsUserExist(user, joinCommunity.UserID); err != nil {
 		return err
 	}
 
-	var communityExist bool
-	if err := c.communityRepo.IsCommunityExist(&communityExist, joinCommunity.CommunityID); err != nil {
+	var community *entity.Community
+	if err := c.communityRepo.IsCommunityExist(community, joinCommunity.CommunityID); err != nil {
 		return err
-	}
-
-	if !userExist || !communityExist {
-		return errors.New("user or community doesn't exist")
 	}
 
 	newCommunityMember := entity.CommunityMember{
@@ -82,5 +77,11 @@ func (c *CommunityService) LeaveCommunity(leave dto.LeaveCommunity) error {
 }
 
 func (c *CommunityService) IsCommunityExist(exist *bool, comunityId uuid.UUID) error {
-	return c.communityRepo.IsCommunityExist(exist, comunityId)
+	var community *entity.Community
+	if err := c.communityRepo.IsCommunityExist(community, comunityId); err != nil {
+		return err
+	}
+
+	*exist = true
+	return nil
 }

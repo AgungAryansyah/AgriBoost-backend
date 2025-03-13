@@ -11,7 +11,7 @@ import (
 
 type MessageServiceItf interface {
 	GetMessages(messages *[]dto.MessageDto, param dto.MessageParam) error
-	SendMessage(msg string, communityId, userId uuid.UUID) error
+	SendMessage(send dto.SendMessage) error
 }
 
 type MessageService struct {
@@ -28,12 +28,12 @@ func (m *MessageService) GetMessages(messages *[]dto.MessageDto, param dto.Messa
 	return m.messageRepo.GetMessages(messages, param.Page, param.PageSize, param.CommunityId)
 }
 
-func (m *MessageService) SendMessage(message string, communityId, userId uuid.UUID) error {
+func (m *MessageService) SendMessage(send dto.SendMessage) error {
 	return m.messageRepo.CreateMessage(&entity.Message{
 		MessageID:   uuid.New(),
-		Message:     message,
-		CommunityId: communityId,
-		UserId:      userId,
+		Message:     send.Message,
+		CommunityId: send.CommunityId,
+		UserId:      send.UserId,
 		TimeSent:    time.Now(),
 	})
 }

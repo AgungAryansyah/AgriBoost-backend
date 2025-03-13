@@ -8,13 +8,13 @@ import (
 )
 
 type QuizParam struct {
-	QuizId uuid.UUID `json:"quiz_id" validated:"required,uuid"`
+	QuizId uuid.UUID `json:"quiz_id" validate:"required,uuid"`
 }
 
 type CreateAttempt struct {
-	UserId     uuid.UUID `json:"user_id" validated:"required,uuid"`
-	QuizId     uuid.UUID `json:"quiz_id" validated:"required,uuid"`
-	TotalScore int       `json:"total_score" validated:"required,min=1"`
+	UserId     uuid.UUID `json:"user_id" validate:"required,uuid"`
+	QuizId     uuid.UUID `json:"quiz_id" validate:"required,uuid"`
+	TotalScore int       `json:"total_score" validate:"required,min=1"`
 }
 
 type QuizDto struct {
@@ -38,9 +38,9 @@ type OptionDto struct {
 }
 
 type UserAnswersDto struct {
-	UserId  uuid.UUID               `json:"user_id" validated:"required,uuid"`
-	QuizId  uuid.UUID               `json:"quiz_id" validated:"required,uuid"`
-	Answers map[uuid.UUID]uuid.UUID `json:"answers" validated:"required,uuid"`
+	UserId  uuid.UUID               `json:"user_id" validate:"required,uuid"`
+	QuizId  uuid.UUID               `json:"quiz_id" validate:"required,uuid"`
+	Answers map[uuid.UUID]uuid.UUID `json:"answers" validate:"required,answers_map"`
 }
 
 func QuizWithOptionAndoptionToDto(quiz entity.Quiz, quizDto *QuizDto) {

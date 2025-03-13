@@ -1,20 +1,17 @@
+version: "3.8"
+
 services:
-  postgres-intern-bcc:  
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin_password
-      POSTGRES_DB: intern_bcc
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  agriboost:
+  gofiber_app:
     build: .
+    container_name: agriboost-backend
     ports:
-      - "8083:8083"
+      - ":"
+    networks:
+      -  
+    env_file:
+      - .env
+    restart: unless-stopped
 
-volumes:
-  pgdata:
+networks:
+  existing_network:
+    external: true 

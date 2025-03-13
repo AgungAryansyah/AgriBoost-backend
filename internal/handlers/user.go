@@ -32,8 +32,8 @@ func (u *UserHandler) Register(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}
 
-	if err := ctx.BodyParser(&register); err != nil {
-		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
+	if err := u.validator.Struct(register); err != nil {
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	if err := u.userService.Register(register); err != nil {
@@ -50,7 +50,7 @@ func (u *UserHandler) Login(ctx *fiber.Ctx) error {
 	}
 
 	if err := u.validator.Struct(login); err != nil {
-		return utils.HttpError(ctx, "invalid request", err)
+		return utils.HttpError(ctx, "invalid data", err)
 	}
 
 	token, err := u.userService.Login(login)
