@@ -7,6 +7,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type CommunityServiceItf interface {
@@ -51,16 +52,18 @@ func (c *CommunityService) GetUserCommunities(community *[]entity.Community, use
 func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error {
 	var user *entity.User
 	if err := c.userRepo.IsUserExist(user, joinCommunity.UserID); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("user or community doesn't exist")
+		}
 		return err
 	}
 
 	var community *entity.Community
 	if err := c.communityRepo.IsCommunityExist(community, joinCommunity.CommunityID); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("user or community doesn't exist")
+		}
 		return err
-	}
-
-	if user == nil || community == nil {
-		return errors.New("user or community doesn't exist")
 	}
 
 	newCommunityMember := entity.CommunityMember{
@@ -84,11 +87,10 @@ func (c *CommunityService) LeaveCommunity(leave dto.LeaveCommunity) error {
 func (c *CommunityService) IsCommunityExist(exist *bool, comunityId uuid.UUID) error {
 	var community *entity.Community
 	if err := c.communityRepo.IsCommunityExist(community, comunityId); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("community doesn't exist")
+		}
 		return err
-	}
-
-	if community == nil {
-		return errors.New("community doesn't exist")
 	}
 
 	*exist = true
