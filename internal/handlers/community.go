@@ -63,7 +63,7 @@ func (c *CommunityHandler) GetAllCommunity(ctx *fiber.Ctx) error {
 }
 
 func (c *CommunityHandler) GetUserCommunities(ctx *fiber.Ctx) error {
-	var param dto.UserParam
+	var param dto.CommunityParam
 	if err := ctx.BodyParser(&param); err != nil {
 		return utils.HttpError(ctx, "can't parse data, wrong JSON request format", err)
 	}

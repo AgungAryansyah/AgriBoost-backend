@@ -11,7 +11,7 @@ import (
 type CommunityServiceItf interface {
 	CreateCommunity(createCommunity dto.CreateCommunity) error
 	GetAllCommunity(community *[]entity.Community) error
-	GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error
+	GetUserCommunities(community *[]entity.Community, communityParam dto.CommunityParam) error
 	JoinCommunity(joinCommunity dto.JoinCommunity) error
 	LeaveCommunity(leave dto.LeaveCommunity) error
 	IsCommunityExist(exist *bool, comunityId uuid.UUID) error
@@ -43,8 +43,8 @@ func (c *CommunityService) GetAllCommunity(community *[]entity.Community) error 
 	return c.communityRepo.GetAllCommunity(community)
 }
 
-func (c *CommunityService) GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error {
-	return c.communityRepo.GetUserCommunities(community, userParam)
+func (c *CommunityService) GetUserCommunities(community *[]entity.Community, communityParam dto.CommunityParam) error {
+	return c.communityRepo.GetUserCommunities(community, communityParam)
 }
 
 func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error {
