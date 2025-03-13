@@ -8,6 +8,7 @@ import (
 	database "AgriBoost/internal/infra/postgres"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
+	"AgriBoost/internal/utils"
 	"errors"
 	"os"
 
@@ -36,6 +37,8 @@ func main() {
 		panic(err)
 	}
 	val := validator.New()
+	utils.RegisterValidator(val)
+
 	v1 := app.Group("api/v1")
 	jwt := jwt.NewJwt(*env)
 	middleware := middleware.NewMiddleware(jwt)
