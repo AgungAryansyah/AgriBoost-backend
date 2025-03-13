@@ -17,6 +17,7 @@ import (
 
 func main() {
 	app := fiber.New()
+	app.Use(middleware.RateLimiter())
 
 	env := env.NewEnv()
 	if env == nil {
