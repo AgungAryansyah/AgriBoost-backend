@@ -13,6 +13,7 @@ type UserRepoItf interface {
 	Get(user *entity.User, userParam dto.UserParam) error
 	AddQuizPoint(userParam dto.UserParam, score int) error
 	IsUserExist(exist *bool, userId uuid.UUID) error
+	IsUserExistName(userName *string, userId uuid.UUID) error
 }
 
 type UserRepo struct {
@@ -42,4 +43,9 @@ func (u *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
 
 func (u *UserRepo) IsUserExist(exist *bool, userId uuid.UUID) error {
 	return u.db.Model(&entity.User{}).Select("id").Where("id = ?", userId).First(&exist).Error
+}
+
+func (u *UserRepo) IsUserExistName(userName *string, userId uuid.UUID) error {
+	var user entity.User
+	return u.db.Model(&entity.User{}).Select("name").Where("id = ?", userId).First(&user).Error
 }

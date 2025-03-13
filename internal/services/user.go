@@ -14,6 +14,7 @@ import (
 type UserServiceItf interface {
 	Register(dto.Register) error
 	Login(dto.Login) (string, error)
+	IsUserExistName(userName string, userId uuid.UUID) error
 }
 
 type UserService struct {
@@ -61,4 +62,8 @@ func (u *UserService) Login(login dto.Login) (string, error) {
 	}
 
 	return u.jwt.GenerateToken(user.Id, user.IsAdmin)
+}
+
+func (u *UserService) IsUserExistName(userName string, userId uuid.UUID) error {
+	return u.userRepo.IsUserExistName(&userName, userId)
 }

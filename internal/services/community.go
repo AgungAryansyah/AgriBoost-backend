@@ -15,6 +15,7 @@ type CommunityServiceItf interface {
 	GetUserCommunities(community *[]entity.Community, userParam dto.UserParam) error
 	JoinCommunity(joinCommunity dto.JoinCommunity) error
 	LeaveCommunity(leave dto.LeaveCommunity) error
+	IsCommunityExist(exist *bool, comunityId uuid.UUID) error
 }
 
 type CommunityService struct {
@@ -78,4 +79,8 @@ func (c *CommunityService) LeaveCommunity(leave dto.LeaveCommunity) error {
 	}
 
 	return c.communityRepo.RemoveCommunityMember(&communityMember)
+}
+
+func (c *CommunityService) IsCommunityExist(exist *bool, comunityId uuid.UUID) error {
+	return c.communityRepo.IsCommunityExist(exist, comunityId)
 }
