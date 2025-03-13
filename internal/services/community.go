@@ -4,11 +4,8 @@ import (
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
-	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type CommunityServiceItf interface {
@@ -53,19 +50,11 @@ func (c *CommunityService) GetUserCommunities(community *[]entity.Community, use
 func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error {
 	var user *entity.User
 	if err := c.userRepo.IsUserExist(user, joinCommunity.UserID); err != nil {
-		fmt.Println("error user dont exist")
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errors.New("user or community doesn't exist")
-		}
 		return err
 	}
 
 	var community *entity.Community
 	if err := c.communityRepo.IsCommunityExist(community, joinCommunity.CommunityID); err != nil {
-		fmt.Println("error community dont exist")
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errors.New("user or community doesn't exist")
-		}
 		return err
 	}
 
@@ -90,9 +79,6 @@ func (c *CommunityService) LeaveCommunity(leave dto.LeaveCommunity) error {
 func (c *CommunityService) IsCommunityExist(exist *bool, comunityId uuid.UUID) error {
 	var community *entity.Community
 	if err := c.communityRepo.IsCommunityExist(community, comunityId); err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errors.New("community doesn't exist")
-		}
 		return err
 	}
 
