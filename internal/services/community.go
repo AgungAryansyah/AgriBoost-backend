@@ -5,6 +5,7 @@ import (
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -52,6 +53,7 @@ func (c *CommunityService) GetUserCommunities(community *[]entity.Community, use
 func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error {
 	var user *entity.User
 	if err := c.userRepo.IsUserExist(user, joinCommunity.UserID); err != nil {
+		fmt.Println("error user dont exist")
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("user or community doesn't exist")
 		}
@@ -60,6 +62,7 @@ func (c *CommunityService) JoinCommunity(joinCommunity dto.JoinCommunity) error 
 
 	var community *entity.Community
 	if err := c.communityRepo.IsCommunityExist(community, joinCommunity.CommunityID); err != nil {
+		fmt.Println("error community dont exist")
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("user or community doesn't exist")
 		}

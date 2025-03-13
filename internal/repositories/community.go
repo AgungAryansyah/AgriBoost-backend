@@ -43,7 +43,7 @@ func (c *CommunityRepo) CreateCommunityMember(communityMember *entity.CommunityM
 }
 
 func (c *CommunityRepo) IsCommunityExist(community *entity.Community, communityId uuid.UUID) error {
-	return c.db.Model(&entity.Community{}).Select("community_id").Where("community_id = ?", communityId).First(community).Error
+	return c.db.Model(&entity.Community{}).Select("community_id").Where("community_id = ?", communityId).First(&community).Error
 }
 
 func (c *CommunityRepo) RemoveCommunityMember(member *entity.CommunityMember) error {
