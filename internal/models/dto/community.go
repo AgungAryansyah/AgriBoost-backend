@@ -13,8 +13,8 @@ type JoinCommunity struct {
 }
 
 type CommunityParam struct {
-	CommunityID uuid.UUID `json:"community_id" validate:"uuid"`
-	UserID      uuid.UUID `json:"user_id" validate:"uuid"`
+	CommunityID uuid.UUID `json:"community_id" validate:"omitempty,uuid"`
+	UserID      uuid.UUID `json:"user_id" validate:"omitempty,uuid"`
 }
 
 type LeaveCommunity struct {
