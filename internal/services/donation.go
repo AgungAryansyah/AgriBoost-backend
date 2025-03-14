@@ -54,38 +54,54 @@ func (d *DonationService) Donate(donate dto.Donate, donationID uuid.UUID) error 
 }
 
 func (d *DonationService) HandleMidtransWebhook(PaymentDetails map[string]interface{}) error {
-	orderID, ok := PaymentDetails["order_id"].(uuid.UUID)
-	if ok {
+	orderIDs, ok := PaymentDetails["order_id"].(string)
+	if !ok {
 		return errors.New("invalid payment details")
 	}
 
-	var donation entity.Donation
-	if err := d.donationRepo.GetOne(&donation, dto.DonationParam{DonationId: orderID}); err != nil {
+	orderId, err := uuid.Parse(orderIDs)
+	if err != nil {
 		return err
 	}
 
-	status, ok := PaymentDetails["transaction_status"].(string)
-	if ok {
+	var donation entity.Donation
+	if err := d.donationRepo.GetOne(&donation, dto.DonationParam{DonationId: orderId}); err != nil {
+		return err
+	}
+
+	status, ok := PaymentDetails["transaction_status"]
+	if !ok {
 		return errors.New("invalid payment details")
 	}
 
-	fraud, ok := PaymentDetails["fraud_status"].(string)
-	if ok {
+	fraud, ok := PaymentDetails["fraud_status"]
+	if !ok {
 		return errors.New("invalid payment details")
 	}
 
-	if fraud == "accept" && (status == "capture" || status == "settlement") {
+	if status == "capture" {
+		if fraud == "challenge" {
+			if err := d.donationRepo.UpdateDonationStatus(&donation, "challenge"); err != nil {
+				return err
+			}
+		} else if fraud == "accept" {
+			if err := d.donationRepo.UpdateDonationStatus(&donation, "accepted"); err != nil {
+				return err
+			}
+		}
+	} else if status == "settlement" {
 		if err := d.donationRepo.UpdateDonationStatus(&donation, "accepted"); err != nil {
 			return err
 		}
-		if err := d.campaignRepo.AddDonation(donation.CampaignId, donation.Amount); err != nil {
+	} else if status == "deny" {
+		if err := d.donationRepo.UpdateDonationStatus(&donation, "deny"); err != nil {
 			return err
 		}
-	} else {
-		if err := d.donationRepo.UpdateDonationStatus(&donation, "rejected"); err != nil {
+	} else if status == "cancel" || status == "expire" {
+		if err := d.donationRepo.UpdateDonationStatus(&donation, "failed"); err != nil {
 			return err
 		}
 	}
 
-	return errors.New("invalid payment")
+	return nil
 }

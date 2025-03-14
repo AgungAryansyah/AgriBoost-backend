@@ -5,6 +5,7 @@ import (
 	"AgriBoost/internal/infra/env"
 	"AgriBoost/internal/infra/jwt"
 	"AgriBoost/internal/infra/middleware"
+	"AgriBoost/internal/infra/midtrans"
 	database "AgriBoost/internal/infra/postgres"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
@@ -42,6 +43,7 @@ func main() {
 	v1 := app.Group("api/v1")
 	jwt := jwt.NewJwt(*env)
 	middleware := middleware.NewMiddleware(jwt)
+	midtrans := midtrans.NewMidtrans(*env)
 
 	userRepository := repositories.NewUserRepo(db)
 	userService := services.NewUserService(userRepository, jwt)
@@ -53,7 +55,7 @@ func main() {
 
 	donationRepository := repositories.NewDonationRepo(db)
 	donationService := services.NewDonationService(donationRepository, campaignRepository)
-	handlers.NewDonationHandler(v1, donationService, val, middleware)
+	handlers.NewDonationHandler(v1, donationService, val, middleware, midtrans)
 
 	quizRepository := repositories.NewQuizRepo(db)
 	quizService := services.NewQuizService(quizRepository, userRepository)
