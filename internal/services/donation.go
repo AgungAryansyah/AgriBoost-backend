@@ -54,13 +54,18 @@ func (d *DonationService) Donate(donate dto.Donate, donationID uuid.UUID) error 
 }
 
 func (d *DonationService) HandleMidtransWebhook(PaymentDetails map[string]interface{}) error {
-	orderID, ok := PaymentDetails["order_id"].(uuid.UUID)
+	orderIDs, ok := PaymentDetails["order_id"].(string)
 	if !ok {
 		return errors.New("invalid payment details")
 	}
 
+	orderId, err := uuid.Parse(orderIDs)
+	if err != nil {
+		return err
+	}
+
 	var donation entity.Donation
-	if err := d.donationRepo.GetOne(&donation, dto.DonationParam{DonationId: orderID}); err != nil {
+	if err := d.donationRepo.GetOne(&donation, dto.DonationParam{DonationId: orderId}); err != nil {
 		return err
 	}
 
