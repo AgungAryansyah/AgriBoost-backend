@@ -5,6 +5,7 @@ import (
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -73,6 +74,8 @@ func (d *DonationService) HandleMidtransWebhook(PaymentDetails map[string]interf
 	if ok {
 		return errors.New("invalid payment details")
 	}
+
+	fmt.Println(status, " ", fraud)
 
 	if status == "capture" {
 		if fraud == "challenge" {
