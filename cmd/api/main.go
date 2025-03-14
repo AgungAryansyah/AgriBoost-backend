@@ -7,6 +7,7 @@ import (
 	"AgriBoost/internal/infra/middleware"
 	"AgriBoost/internal/infra/midtrans"
 	database "AgriBoost/internal/infra/postgres"
+	storage "AgriBoost/internal/infra/supabase"
 	"AgriBoost/internal/repositories"
 	"AgriBoost/internal/services"
 	"AgriBoost/internal/utils"
@@ -44,7 +45,7 @@ func main() {
 	jwt := jwt.NewJwt(*env)
 	middleware := middleware.NewMiddleware(jwt)
 	midtrans := midtrans.NewMidtrans(*env)
-	//storage := storage.New(env)
+	storage := storage.New(env)
 
 	userRepository := repositories.NewUserRepo(db)
 	userService := services.NewUserService(userRepository, jwt)
@@ -73,6 +74,9 @@ func main() {
 	messageRepository := repositories.NewMessageRepo(db)
 	messageService := services.NewMessageService(messageRepository)
 	handlers.NewMessageHandler(v1, messageService, communityService, userService, val, middleware)
+
+	storageService := services.NewStorageService(storage)
+	handlers.NewStorageHandler(v1, storageService, val, middleware)
 
 	port := os.Getenv("APP_PORT")
 	add := os.Getenv("APP_ADDRESS")

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"mime/multipart"
 	"regexp"
 
 	"github.com/go-playground/validator/v10"
@@ -28,7 +29,36 @@ func ValidateIndonesianPhone(fl validator.FieldLevel) bool {
 	return re.MatchString(phone)
 }
 
+func ValidateImage(fl validator.FieldLevel) bool {
+	fileHeader, ok := fl.Field().Interface().(*multipart.FileHeader)
+	if !ok {
+		return false
+	}
+
+	allowedTypes := []string{"image/jpeg", "image/png", "image/gif"}
+
+	contentType := fileHeader.Header.Get("Content-Type")
+	for _, t := range allowedTypes {
+		if contentType == t {
+			return true
+		}
+	}
+	return false
+}
+
+func ValidateImageSize(fl validator.FieldLevel) bool {
+	fileHeader, ok := fl.Field().Interface().(*multipart.FileHeader)
+	if !ok {
+		return false
+	}
+
+	const maxSize = 2 * 1024 * 1024
+	return fileHeader.Size <= maxSize
+}
+
 func RegisterValidator(v *validator.Validate) {
 	v.RegisterValidation("answers_map", ValidateAnswersMap)
 	v.RegisterValidation("phone_val", ValidateIndonesianPhone)
+	v.RegisterValidation("image_val", ValidateImage)
+	v.RegisterValidation("image_size_val", ValidateImageSize)
 }
