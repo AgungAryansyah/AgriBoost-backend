@@ -23,7 +23,7 @@ func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, use
 	routerGroup = routerGroup.Group("/users")
 
 	routerGroup.Post("/register", UserHandler.Register)
-	routerGroup.Get("/login", UserHandler.Login)
+	routerGroup.Post("/login", UserHandler.Login)
 }
 
 func (u *UserHandler) Register(ctx *fiber.Ctx) error {

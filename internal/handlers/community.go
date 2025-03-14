@@ -27,7 +27,7 @@ func NewCommunityHandler(routerGroup fiber.Router, validator *validator.Validate
 	routerGroup = routerGroup.Group("community")
 	routerGroup.Post("/create", middleware.AdminOnly, communityHandler.CreateCommunity)
 	routerGroup.Get("/all", middleware.Authentication, communityHandler.GetAllCommunity)
-	routerGroup.Get("/user", middleware.Authentication, communityHandler.GetUserCommunities)
+	routerGroup.Post("/user", middleware.Authentication, communityHandler.GetUserCommunities)
 	routerGroup.Post("/join", middleware.Authentication, communityHandler.JoinCommunity)
 	routerGroup.Delete("/leave", middleware.Authentication, communityHandler.LeaveCommunity)
 }

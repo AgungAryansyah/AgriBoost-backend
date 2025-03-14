@@ -26,7 +26,7 @@ func NewQuizHandler(routerGroup fiber.Router, quizService services.QuizServiceIt
 	routerGroup = routerGroup.Group("/quiz")
 
 	routerGroup.Get("/all", middleware.Authentication, QuizHandler.GetAllQuizzes)
-	routerGroup.Get("/quizzes", middleware.Authentication, QuizHandler.GetQuizWithQuestionAndOption)
+	routerGroup.Post("/quizzes", middleware.Authentication, QuizHandler.GetQuizWithQuestionAndOption)
 	routerGroup.Post("/attempt", middleware.Authentication, QuizHandler.CreateAttempt)
 }
 

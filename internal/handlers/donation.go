@@ -29,9 +29,9 @@ func NewDonationHandler(routerGroup fiber.Router, donationService services.Donat
 	}
 
 	routerGroup = routerGroup.Group("/donation")
-	routerGroup.Get("/id", DonationHandler.GetDonationById)
-	routerGroup.Get("/user", middleware.Authentication, DonationHandler.GetDonationByUser)
-	routerGroup.Get("/campaign", DonationHandler.GetDonationByCampaign)
+	routerGroup.Post("/id", DonationHandler.GetDonationById)
+	routerGroup.Post("/user", middleware.Authentication, DonationHandler.GetDonationByUser)
+	routerGroup.Post("/campaign", DonationHandler.GetDonationByCampaign)
 	routerGroup.Post("/donate", middleware.Authentication, DonationHandler.Donate)
 	routerGroup.Post("/webhook", DonationHandler.HandleMidtransWebhook)
 }
