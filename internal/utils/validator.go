@@ -31,7 +31,7 @@ func ValidateIndonesianPhone(fl validator.FieldLevel) bool {
 }
 
 func ValidateImage(fl validator.FieldLevel) bool {
-	fileHeader, ok := fl.Field().Interface().(*multipart.FileHeader)
+	fileHeader, ok := fl.Field().Interface().(multipart.FileHeader)
 	if !ok {
 		return false
 	}
@@ -59,7 +59,7 @@ func ValidateImage(fl validator.FieldLevel) bool {
 }
 
 func ValidateImageSize(fl validator.FieldLevel) bool {
-	fileHeader, ok := fl.Field().Interface().(*multipart.FileHeader)
+	fileHeader, ok := fl.Field().Interface().(multipart.FileHeader)
 	if !ok {
 		return false
 	}
