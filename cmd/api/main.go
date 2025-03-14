@@ -13,9 +13,11 @@ import (
 	"AgriBoost/internal/utils"
 	"errors"
 	"os"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
@@ -27,6 +29,11 @@ func main() {
 		AllowMethods:     "GET, POST, DELETE",
 		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
 		AllowCredentials: true,
+	}))
+
+	app.Use(cache.New(cache.Config{
+		Expiration:   10 * time.Second,
+		CacheControl: true,
 	}))
 
 	env := env.NewEnv()
@@ -56,7 +63,7 @@ func main() {
 	handlers.NewCampaignHandler(v1, val, campaignService, middleware)
 
 	donationRepository := repositories.NewDonationRepo(db)
-	donationService := services.NewDonationService(donationRepository, campaignRepository)
+	donationService := services.NewDonationService(donationRepository, campaignRepository, userRepository)
 	handlers.NewDonationHandler(v1, donationService, val, middleware, midtrans)
 
 	quizRepository := repositories.NewQuizRepo(db)
