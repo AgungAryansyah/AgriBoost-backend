@@ -24,7 +24,7 @@ func NewStorageHandler(routerGroup fiber.Router, storageService services.Storage
 	}
 
 	routerGroup = routerGroup.Group("/storage")
-	routerGroup.Post("/upload", middleware.Authentication, StorageHandler.UploadHandler)
+	routerGroup.Post("/file", middleware.Authentication, StorageHandler.UploadHandler)
 }
 
 func (s *StorageHandler) UploadHandler(ctx *fiber.Ctx) error {

@@ -32,7 +32,7 @@ func NewDonationHandler(routerGroup fiber.Router, donationService services.Donat
 	routerGroup.Post("/id", DonationHandler.GetDonationById)
 	routerGroup.Post("/user", middleware.Authentication, DonationHandler.GetDonationByUser)
 	routerGroup.Post("/campaign", DonationHandler.GetDonationByCampaign)
-	routerGroup.Post("/donate", middleware.Authentication, DonationHandler.Donate)
+	routerGroup.Post("/donation", middleware.Authentication, DonationHandler.Donate)
 	routerGroup.Post("/webhook", DonationHandler.HandleMidtransWebhook)
 }
 

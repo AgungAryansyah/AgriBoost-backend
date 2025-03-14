@@ -28,7 +28,7 @@ func NewUserHandler(routerGroup fiber.Router, validator *validator.Validate, use
 
 	routerGroup.Post("/register", UserHandler.Register)
 	routerGroup.Post("/login", UserHandler.Login)
-	routerGroup.Patch("/edit", middleware.Authentication, UserHandler.EditProfile)
+	routerGroup.Patch("/profile", middleware.Authentication, UserHandler.EditProfile)
 }
 
 func (u *UserHandler) Register(ctx *fiber.Ctx) error {
