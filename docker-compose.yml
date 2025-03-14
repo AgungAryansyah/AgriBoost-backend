@@ -7,11 +7,11 @@ services:
     ports:
       - ":"
     networks:
-      -  
+      -  network_name
     env_file:
       - .env
     restart: unless-stopped
 
 networks:
-  existing_network:
+  network_name:
     external: true 

@@ -23,7 +23,7 @@ func main() {
 	app := fiber.New()
 	app.Use(middleware.RateLimiter())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://api.sandbox.midtrans.com",
+		AllowOrigins:     "https://api.sandbox.midtrans.com, https://agriboost-v2.vercel.app/",
 		AllowMethods:     "GET, POST, DELETE",
 		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
 		AllowCredentials: true,
