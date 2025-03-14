@@ -14,6 +14,8 @@ type UserRepoItf interface {
 	AddQuizPoint(userParam dto.UserParam, score int) error
 	IsUserExist(user *entity.User, userId uuid.UUID) error
 	IsUserExistName(userName *string, userId uuid.UUID) error
+	AddDonationPoint(userParam dto.UserParam, score int) error
+	EditProfile(edit *dto.EditProfile) error
 }
 
 type UserRepo struct {
@@ -38,6 +40,32 @@ func (u *UserRepo) AddQuizPoint(userParam dto.UserParam, score int) error {
 		return err
 	}
 	user.QuizPoint += score
+	return u.db.Save(&user).Error
+}
+
+func (u *UserRepo) AddDonationPoint(userParam dto.UserParam, score int) error {
+	var user entity.User
+	if err := u.Get(&user, userParam); err != nil {
+		return err
+	}
+	user.DonationPoint += score
+	return u.db.Save(&user).Error
+}
+
+func (u *UserRepo) EditProfile(edit *dto.EditProfile) error {
+	var user entity.User
+	if err := u.Get(&user, dto.UserParam{Id: edit.Id}); err != nil {
+		return err
+	}
+
+	if edit.Name != "" {
+		user.Name = edit.Name
+	}
+
+	if edit.ProfilePicture != "" {
+		user.ProfilePicture = edit.ProfilePicture
+	}
+
 	return u.db.Save(&user).Error
 }
 

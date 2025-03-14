@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    profile_picture TEXT UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(15) NOT NULL, UNIQUE,
     password VARCHAR(255) NOT NULL,
     quiz_point INTEGER NOT NULL DEFAULT 0,
     donation_point INTEGER NOT NULL DEFAULT 0,

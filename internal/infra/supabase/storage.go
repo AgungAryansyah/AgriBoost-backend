@@ -2,35 +2,67 @@ package storage
 
 import (
 	"AgriBoost/internal/infra/env"
+	"bytes"
+	"fmt"
+	"io"
 	"mime/multipart"
-
-	supabasestorageuploader "github.com/adityarizkyramadhan/supabase-storage-uploader"
+	"net/http"
 )
 
 type storage struct {
-	client *supabasestorageuploader.Client
+	url       string
+	publicUrl string
+	token     string
+	client    http.Client
 }
 
 type StorageItf interface {
 	UploadFile(file *multipart.FileHeader) (string, error)
-	DeleteFile(link string) error
 }
 
-func New(env env.Env) StorageItf {
-	supClient := supabasestorageuploader.New(
-		env.SUPABASE_PROJECT_URL,
-		env.SUPABASE_TOKEN,
-		env.SUPABASE_BUCKET_NAME,
-	)
+func New(env *env.Env) StorageItf {
+	url := fmt.Sprintf("%s/storage/v1/object/%s/", env.SUPABASE_PROJECT_URL, env.SUPABASE_BUCKET_NAME)
+	publicURL := fmt.Sprintf("%s/storage/v1/object/public/%s/", env.SUPABASE_PROJECT_URL, env.SUPABASE_BUCKET_NAME)
 	return storage{
-		client: supClient,
+		url:       url,
+		publicUrl: publicURL,
+		token:     env.SUPABASE_TOKEN,
+		client:    http.Client{},
 	}
 }
 
 func (s storage) UploadFile(file *multipart.FileHeader) (string, error) {
-	return s.client.Upload(file)
-}
+	src, err := file.Open()
+	if err != nil {
+		return "", err
+	}
+	defer src.Close()
 
-func (s storage) DeleteFile(link string) error {
-	return s.client.Delete(link)
+	fileBytes, err := io.ReadAll(src)
+	if err != nil {
+		return "", err
+	}
+
+	url := s.url + file.Filename
+
+	req, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(fileBytes))
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+s.token)
+	req.Header.Set("Content-Type", file.Header.Get("Content-Type"))
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
+		return "", err
+	}
+
+	publicURL := s.publicUrl + file.Filename
+	return publicURL, nil
 }

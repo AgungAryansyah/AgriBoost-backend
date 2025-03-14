@@ -25,11 +25,11 @@ func NewCommunityHandler(routerGroup fiber.Router, validator *validator.Validate
 	}
 
 	routerGroup = routerGroup.Group("community")
-	routerGroup.Post("/create", middleware.AdminOnly, communityHandler.CreateCommunity)
-	routerGroup.Get("/all", middleware.Authentication, communityHandler.GetAllCommunity)
-	routerGroup.Get("/user", middleware.Authentication, communityHandler.GetUserCommunities)
-	routerGroup.Post("/join", middleware.Authentication, communityHandler.JoinCommunity)
-	routerGroup.Delete("/leave", middleware.Authentication, communityHandler.LeaveCommunity)
+	routerGroup.Post("/community", middleware.AdminOnly, communityHandler.CreateCommunity)
+	routerGroup.Get("/communities", middleware.Authentication, communityHandler.GetAllCommunity)
+	routerGroup.Post("/users", middleware.Authentication, communityHandler.GetUserCommunities)
+	routerGroup.Post("/member", middleware.Authentication, communityHandler.JoinCommunity)
+	routerGroup.Delete("/member", middleware.Authentication, communityHandler.LeaveCommunity)
 }
 
 func (c *CommunityHandler) CreateCommunity(ctx *fiber.Ctx) error {

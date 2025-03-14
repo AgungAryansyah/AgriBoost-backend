@@ -25,8 +25,8 @@ func NewArticleHandler(routerGroup fiber.Router, articleService services.Article
 	}
 
 	routerGroup = routerGroup.Group("/article")
-	routerGroup.Get("/all", ArticleHandler.GetAllArticles)
-	routerGroup.Get("/one", ArticleHandler.GetArticle)
+	routerGroup.Get("/articles", ArticleHandler.GetAllArticles)
+	routerGroup.Get("/article", ArticleHandler.GetArticle)
 }
 
 func (a *ArticleHandler) GetAllArticles(ctx *fiber.Ctx) error {

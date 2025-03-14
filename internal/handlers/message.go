@@ -33,7 +33,7 @@ func NewMessageHandler(routerGroup fiber.Router, messageService services.Message
 
 	routerGroup = routerGroup.Group("/message")
 	routerGroup.Get("/ws/:roomID", middleware.Authentication, websocket.New(MessageHandler.MessageWebSocketHandler))
-	routerGroup.Get("/get", middleware.Authentication, MessageHandler.GetMessages)
+	routerGroup.Post("/messages", middleware.Authentication, MessageHandler.GetMessages)
 }
 
 func (m *MessageHandler) GetMessages(ctx *fiber.Ctx) error {

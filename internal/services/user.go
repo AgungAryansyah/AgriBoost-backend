@@ -5,6 +5,7 @@ import (
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
+	"AgriBoost/internal/utils"
 	"errors"
 
 	"github.com/google/uuid"
@@ -12,9 +13,10 @@ import (
 )
 
 type UserServiceItf interface {
-	Register(dto.Register) error
-	Login(dto.Login) (string, error)
+	Register(register dto.Register, id *uuid.UUID) error
+	Login(login dto.Login, id *uuid.UUID) (string, error)
 	IsUserExistName(userName string, userId uuid.UUID) error
+	EditProfile(edit *dto.EditProfile) error
 }
 
 type UserService struct {
@@ -29,7 +31,7 @@ func NewUserService(userRepo repositories.UserRepoItf, jwt jwt.JWTItf) UserServi
 	}
 }
 
-func (u *UserService) Register(register dto.Register) error {
+func (u *UserService) Register(register dto.Register, id *uuid.UUID) error {
 	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -38,17 +40,19 @@ func (u *UserService) Register(register dto.Register) error {
 
 	newUser := entity.User{
 		Id:       uuid.New(),
-		Name:     register.Name,
+		Name:     utils.GetUsername(register.Email),
+		Phone:    register.Phone,
 		Email:    register.Email,
 		Password: string(hasedPassword),
 	}
 
 	err = u.userRepo.Create(&newUser)
 
+	*id = newUser.Id
 	return err
 }
 
-func (u *UserService) Login(login dto.Login) (string, error) {
+func (u *UserService) Login(login dto.Login, id *uuid.UUID) (string, error) {
 	var user entity.User
 
 	err := u.userRepo.Get(&user, dto.UserParam{Email: login.Email})
@@ -61,9 +65,15 @@ func (u *UserService) Login(login dto.Login) (string, error) {
 		return "", errors.New("email atau password salah")
 	}
 
+	*id = user.Id
+
 	return u.jwt.GenerateToken(user.Id, user.IsAdmin)
 }
 
 func (u *UserService) IsUserExistName(userName string, userId uuid.UUID) error {
 	return u.userRepo.IsUserExistName(&userName, userId)
+}
+
+func (u *UserService) EditProfile(edit *dto.EditProfile) error {
+	return u.userRepo.EditProfile(edit)
 }
