@@ -26,7 +26,7 @@ func main() {
 	app.Use(middleware.RateLimiter())
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "https://api.sandbox.midtrans.com, https://agriboost-v2.vercel.app/",
-		AllowMethods:     "GET, POST, DELETE, PATCH",
+		AllowMethods:     "GET, POST, DELETE, PATCH, PUT",
 		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
 		AllowCredentials: true,
 	}))
