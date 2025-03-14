@@ -2,6 +2,7 @@ package utils
 
 import (
 	"mime/multipart"
+	"net/http"
 	"regexp"
 
 	"github.com/go-playground/validator/v10"
@@ -35,15 +36,26 @@ func ValidateImage(fl validator.FieldLevel) bool {
 		return false
 	}
 
-	allowedTypes := []string{"image/jpeg", "image/png", "image/gif"}
-
-	contentType := fileHeader.Header.Get("Content-Type")
-	for _, t := range allowedTypes {
-		if contentType == t {
-			return true
-		}
+	file, err := fileHeader.Open()
+	if err != nil {
+		return false
 	}
-	return false
+	defer file.Close()
+
+	buffer := make([]byte, 512)
+	_, err = file.Read(buffer)
+	if err != nil {
+		return false
+	}
+
+	mimeType := http.DetectContentType(buffer)
+	allowedTypes := map[string]bool{
+		"image/jpeg": true,
+		"image/png":  true,
+		"image/gif":  true,
+	}
+
+	return allowedTypes[mimeType]
 }
 
 func ValidateImageSize(fl validator.FieldLevel) bool {
