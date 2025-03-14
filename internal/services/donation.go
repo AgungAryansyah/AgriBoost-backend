@@ -20,12 +20,14 @@ type DonationServiceItf interface {
 type DonationService struct {
 	donationRepo repositories.DonationRepoItf
 	campaignRepo repositories.CampaignRepoItf
+	userRepo     repositories.UserRepoItf
 }
 
-func NewDonationService(donationRepo repositories.DonationRepoItf, campaignRepo repositories.CampaignRepoItf) DonationServiceItf {
+func NewDonationService(donationRepo repositories.DonationRepoItf, campaignRepo repositories.CampaignRepoItf, userRepo repositories.UserRepoItf) DonationServiceItf {
 	return &DonationService{
 		donationRepo: donationRepo,
 		campaignRepo: campaignRepo,
+		userRepo:     userRepo,
 	}
 }
 
@@ -99,6 +101,18 @@ func (d *DonationService) HandleMidtransWebhook(PaymentDetails map[string]interf
 		}
 	} else if status == "cancel" || status == "expire" {
 		if err := d.donationRepo.UpdateDonationStatus(&donation, "failed"); err != nil {
+			return err
+		}
+	}
+
+	if donation.Status == "accepted" {
+		if err := d.campaignRepo.AddDonation(donation.CampaignId, donation.Amount); err != nil {
+			return err
+		}
+
+		if err := d.userRepo.AddDonationPoint(dto.UserParam{
+			Id: donation.UserId,
+		}, donation.Amount/1000); err != nil {
 			return err
 		}
 	}
