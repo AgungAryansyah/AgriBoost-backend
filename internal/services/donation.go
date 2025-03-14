@@ -74,15 +74,26 @@ func (d *DonationService) HandleMidtransWebhook(PaymentDetails map[string]interf
 		return errors.New("invalid payment details")
 	}
 
-	if fraud == "accept" && (status == "capture" || status == "settlement") {
+	if status == "capture" {
+		if fraud == "challenge" {
+			if err := d.donationRepo.UpdateDonationStatus(&donation, "challenge"); err != nil {
+				return err
+			}
+		} else if fraud == "accept" {
+			if err := d.donationRepo.UpdateDonationStatus(&donation, "accepted"); err != nil {
+				return err
+			}
+		}
+	} else if status == "settlement" {
 		if err := d.donationRepo.UpdateDonationStatus(&donation, "accepted"); err != nil {
 			return err
 		}
-		if err := d.campaignRepo.AddDonation(donation.CampaignId, donation.Amount); err != nil {
+	} else if status == "deny" {
+		if err := d.donationRepo.UpdateDonationStatus(&donation, "deny"); err != nil {
 			return err
 		}
-	} else {
-		if err := d.donationRepo.UpdateDonationStatus(&donation, "rejected"); err != nil {
+	} else if status == "cancel" || status == "expire" {
+		if err := d.donationRepo.UpdateDonationStatus(&donation, "failed"); err != nil {
 			return err
 		}
 	}
