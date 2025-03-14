@@ -17,3 +17,9 @@ type UserParam struct {
 	Id    uuid.UUID `json:"id" validate:"required,uuid"`
 	Email string    `json:"email" validate:"required,email"`
 }
+
+type EditProfile struct {
+	Id             uuid.UUID `json:"id" validate:"required,uuid"`
+	Name           string    `json:"name" validate:"string,min=6"`
+	ProfilePicture string    `json:"profile_picture" validate:"url"`
+}

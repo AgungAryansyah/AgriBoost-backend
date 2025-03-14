@@ -16,6 +16,7 @@ type UserServiceItf interface {
 	Register(dto.Register) error
 	Login(dto.Login) (string, error)
 	IsUserExistName(userName string, userId uuid.UUID) error
+	EditProfile(edit *dto.EditProfile) error
 }
 
 type UserService struct {
@@ -68,4 +69,8 @@ func (u *UserService) Login(login dto.Login) (string, error) {
 
 func (u *UserService) IsUserExistName(userName string, userId uuid.UUID) error {
 	return u.userRepo.IsUserExistName(&userName, userId)
+}
+
+func (u *UserService) EditProfile(edit *dto.EditProfile) error {
+	return u.userRepo.EditProfile(edit)
 }

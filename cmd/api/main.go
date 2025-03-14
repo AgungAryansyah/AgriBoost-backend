@@ -26,7 +26,7 @@ func main() {
 	app.Use(middleware.RateLimiter())
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "https://api.sandbox.midtrans.com, https://agriboost-v2.vercel.app/",
-		AllowMethods:     "GET, POST, DELETE",
+		AllowMethods:     "GET, POST, DELETE, PATCH",
 		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
 		AllowCredentials: true,
 	}))
@@ -56,7 +56,7 @@ func main() {
 
 	userRepository := repositories.NewUserRepo(db)
 	userService := services.NewUserService(userRepository, jwt)
-	handlers.NewUserHandler(v1, val, userService)
+	handlers.NewUserHandler(v1, val, userService, middleware)
 
 	campaignRepository := repositories.NewCampaignRepo(db)
 	campaignService := services.NewCampaignService(campaignRepository)
