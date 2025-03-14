@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func HttpSuccess(c *fiber.Ctx, msg string, payload any) error {
+func HttpSuccess(c *fiber.Ctx, msg string, payload ...any) error {
 	if payload == nil {
 		return c.JSON(fiber.Map{
 			"message": msg,

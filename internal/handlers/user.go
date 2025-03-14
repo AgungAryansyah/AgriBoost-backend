@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type UserHandler struct {
@@ -40,11 +41,12 @@ func (u *UserHandler) Register(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "invalid data", err)
 	}
 
-	if err := u.userService.Register(register); err != nil {
+	var id uuid.UUID
+	if err := u.userService.Register(register, &id); err != nil {
 		return utils.HttpError(ctx, "failed to create user", err)
 	}
 
-	return utils.HttpSuccess(ctx, "user created", nil)
+	return utils.HttpSuccess(ctx, "user created", id)
 }
 
 func (u *UserHandler) Login(ctx *fiber.Ctx) error {
@@ -57,12 +59,13 @@ func (u *UserHandler) Login(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "invalid data", err)
 	}
 
-	token, err := u.userService.Login(login)
+	var id uuid.UUID
+	token, err := u.userService.Login(login, &id)
 	if err != nil {
 		return utils.HttpError(ctx, "failed to log in", err)
 	}
 
-	return utils.HttpSuccess(ctx, "successfully login", token)
+	return utils.HttpSuccess(ctx, "successfully login", token, id)
 }
 
 func (u *UserHandler) EditProfile(ctx *fiber.Ctx) error {

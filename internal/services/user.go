@@ -13,8 +13,8 @@ import (
 )
 
 type UserServiceItf interface {
-	Register(dto.Register) error
-	Login(dto.Login) (string, error)
+	Register(register dto.Register, id *uuid.UUID) error
+	Login(login dto.Login, id *uuid.UUID) (string, error)
 	IsUserExistName(userName string, userId uuid.UUID) error
 	EditProfile(edit *dto.EditProfile) error
 }
@@ -31,7 +31,7 @@ func NewUserService(userRepo repositories.UserRepoItf, jwt jwt.JWTItf) UserServi
 	}
 }
 
-func (u *UserService) Register(register dto.Register) error {
+func (u *UserService) Register(register dto.Register, id *uuid.UUID) error {
 	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -48,10 +48,11 @@ func (u *UserService) Register(register dto.Register) error {
 
 	err = u.userRepo.Create(&newUser)
 
+	*id = newUser.Id
 	return err
 }
 
-func (u *UserService) Login(login dto.Login) (string, error) {
+func (u *UserService) Login(login dto.Login, id *uuid.UUID) (string, error) {
 	var user entity.User
 
 	err := u.userRepo.Get(&user, dto.UserParam{Email: login.Email})
@@ -63,6 +64,8 @@ func (u *UserService) Login(login dto.Login) (string, error) {
 	if err != nil {
 		return "", errors.New("email atau password salah")
 	}
+
+	*id = user.Id
 
 	return u.jwt.GenerateToken(user.Id, user.IsAdmin)
 }
