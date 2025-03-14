@@ -44,6 +44,7 @@ func main() {
 	jwt := jwt.NewJwt(*env)
 	middleware := middleware.NewMiddleware(jwt)
 	midtrans := midtrans.NewMidtrans(*env)
+	//storage := storage.New(env)
 
 	userRepository := repositories.NewUserRepo(db)
 	userService := services.NewUserService(userRepository, jwt)

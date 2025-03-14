@@ -5,6 +5,7 @@ import (
 	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/repositories"
+	"AgriBoost/internal/utils"
 	"errors"
 
 	"github.com/google/uuid"
@@ -38,7 +39,8 @@ func (u *UserService) Register(register dto.Register) error {
 
 	newUser := entity.User{
 		Id:       uuid.New(),
-		Name:     register.Name,
+		Name:     utils.GetUsername(register.Email),
+		Phone:    register.Phone,
 		Email:    register.Email,
 		Password: string(hasedPassword),
 	}

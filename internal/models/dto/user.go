@@ -3,7 +3,7 @@ package dto
 import "github.com/google/uuid"
 
 type Register struct {
-	Name     string `json:"name" validate:"required,min=5"`
+	Phone    string `json:"phone" validate:"required,phone_val"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=6"`
 }

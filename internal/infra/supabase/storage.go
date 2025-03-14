@@ -16,7 +16,7 @@ type StorageItf interface {
 	DeleteFile(link string) error
 }
 
-func New(env env.Env) StorageItf {
+func New(env *env.Env) StorageItf {
 	supClient := supabasestorageuploader.New(
 		env.SUPABASE_PROJECT_URL,
 		env.SUPABASE_TOKEN,
