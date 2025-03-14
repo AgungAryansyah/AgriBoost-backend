@@ -55,7 +55,7 @@ func (d *DonationService) Donate(donate dto.Donate, donationID uuid.UUID) error 
 
 func (d *DonationService) HandleMidtransWebhook(PaymentDetails map[string]interface{}) error {
 	orderID, ok := PaymentDetails["order_id"].(uuid.UUID)
-	if ok {
+	if !ok {
 		return errors.New("invalid payment details")
 	}
 
