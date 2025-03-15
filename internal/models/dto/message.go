@@ -14,8 +14,8 @@ type MessageDto struct {
 
 type MessageParam struct {
 	CommunityId uuid.UUID `json:"community_id" validate:"required,uuid"`
-	Page        int       `json:"page" validate:"required,int"`
-	PageSize    int       `json:"page_size" validate:"required,int"`
+	Page        int       `json:"page" validate:"required,min=1"`
+	PageSize    int       `json:"page_size" validate:"required,min=1"`
 }
 
 type SendMessage struct {
