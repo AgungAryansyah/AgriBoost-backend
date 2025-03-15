@@ -10,7 +10,7 @@ import (
 )
 
 type MessageServiceItf interface {
-	GetMessages(messages *[]dto.MessageDto, param dto.MessageParam) error
+	GetMessages(messages *[]entity.Message, param dto.MessageParam) error
 	SendMessage(send dto.SendMessage) error
 }
 
@@ -24,7 +24,7 @@ func NewMessageService(messageRepo repositories.MessageRepoItf) MessageServiceIt
 	}
 }
 
-func (m *MessageService) GetMessages(messages *[]dto.MessageDto, param dto.MessageParam) error {
+func (m *MessageService) GetMessages(messages *[]entity.Message, param dto.MessageParam) error {
 	return m.messageRepo.GetMessages(messages, param.Page, param.PageSize, param.CommunityId)
 }
 

@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"AgriBoost/internal/models/dto"
 	entity "AgriBoost/internal/models/entities"
 
 	"github.com/google/uuid"
@@ -9,7 +8,7 @@ import (
 )
 
 type MessageRepoItf interface {
-	GetMessages(messages *[]dto.MessageDto, page, pageSize int, communityId uuid.UUID) error
+	GetMessages(messages *[]entity.Message, page, pageSize int, communityId uuid.UUID) error
 	CreateMessage(message *entity.Message) error
 }
 
@@ -21,7 +20,7 @@ func NewMessageRepo(db *gorm.DB) MessageRepoItf {
 	return &MessageRepo{db}
 }
 
-func (m *MessageRepo) GetMessages(messages *[]dto.MessageDto, page, pageSize int, communityId uuid.UUID) error {
+func (m *MessageRepo) GetMessages(messages *[]entity.Message, page, pageSize int, communityId uuid.UUID) error {
 	if page < 1 {
 		page = 1
 	}

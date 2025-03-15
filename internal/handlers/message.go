@@ -4,6 +4,7 @@ import (
 	"AgriBoost/internal/infra/middleware"
 	ws "AgriBoost/internal/infra/websocket"
 	"AgriBoost/internal/models/dto"
+	entity "AgriBoost/internal/models/entities"
 	"AgriBoost/internal/services"
 	"AgriBoost/internal/utils"
 	"log"
@@ -46,7 +47,7 @@ func (m *MessageHandler) GetMessages(ctx *fiber.Ctx) error {
 		return utils.HttpError(ctx, "invalid data", err)
 	}
 
-	var messages []dto.MessageDto
+	var messages []entity.Message
 	if err := m.messageService.GetMessages(&messages, param); err != nil {
 		return utils.HttpError(ctx, "failed to get data from the database", err)
 	}
